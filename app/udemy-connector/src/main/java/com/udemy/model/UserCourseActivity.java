@@ -1,6 +1,6 @@
 package com.udemy.model;
 
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -25,19 +25,19 @@ public class UserCourseActivity extends User {
 	private Double completionRatio;
 
 	@JsonProperty("course_enroll_date")
-	private LocalDateTime courseEnrollDate;
+	private OffsetDateTime courseEnrollDate;
 
 	@JsonProperty("course_start_date")
-	private LocalDateTime courseStartDate;
+	private OffsetDateTime courseStartDate;
 
 	@JsonProperty("course_completion_date")
-	private LocalDateTime courseCompletionDate;
+	private OffsetDateTime courseCompletionDate;
 
 	@JsonProperty("course_first_completion_date")
-	private LocalDateTime courseFirstCompletionDate;
+	private OffsetDateTime courseFirstCompletionDate;
 
 	@JsonProperty("course_last_accessed_date")
-	private LocalDateTime courselastAccessedDate;
+	private OffsetDateTime courselastAccessedDate;
 
 	@JsonProperty("is_assigned")
 	private String isAssigned;
@@ -111,47 +111,47 @@ public class UserCourseActivity extends User {
 	}
 
 	/** The date/time the user enrolled in the course */
-	public LocalDateTime getCourseEnrollDate() {
+	public OffsetDateTime getCourseEnrollDate() {
 		return courseEnrollDate;
 	}
 
-	public void setCourseEnrollDate(LocalDateTime courseEnrollDate) {
+	public void setCourseEnrollDate(OffsetDateTime courseEnrollDate) {
 		this.courseEnrollDate = courseEnrollDate;
 	}
 
 	/** The date/time the user started the course */
-	public LocalDateTime getCourseStartDate() {
+	public OffsetDateTime getCourseStartDate() {
 		return courseStartDate;
 	}
 
-	public void setCourseStartDate(LocalDateTime courseStartDate) {
+	public void setCourseStartDate(OffsetDateTime courseStartDate) {
 		this.courseStartDate = courseStartDate;
 	}
 
 	/** The date/time that the course was completed by the user */
-	public LocalDateTime getCourseCompletionDate() {
+	public OffsetDateTime getCourseCompletionDate() {
 		return courseCompletionDate;
 	}
 
-	public void setCourseCompletionDate(LocalDateTime courseCompletionDate) {
+	public void setCourseCompletionDate(OffsetDateTime courseCompletionDate) {
 		this.courseCompletionDate = courseCompletionDate;
 	}
 
 	/** The first date/time that the course was completed by the user */
-	public LocalDateTime getCourseFirstCompletionDate() {
+	public OffsetDateTime getCourseFirstCompletionDate() {
 		return courseFirstCompletionDate;
 	}
 
-	public void setCourseFirstCompletionDate(LocalDateTime courseFirstCompletionDate) {
+	public void setCourseFirstCompletionDate(OffsetDateTime courseFirstCompletionDate) {
 		this.courseFirstCompletionDate = courseFirstCompletionDate;
 	}
 
 	/** The date/time the user last accessed the course */
-	public LocalDateTime getCourselastAccessedDate() {
+	public OffsetDateTime getCourselastAccessedDate() {
 		return courselastAccessedDate;
 	}
 
-	public void setCourselastAccessedDate(LocalDateTime courselastAccessedDate) {
+	public void setCourselastAccessedDate(OffsetDateTime courselastAccessedDate) {
 		this.courselastAccessedDate = courselastAccessedDate;
 	}
 

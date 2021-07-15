@@ -1,16 +1,16 @@
 package com.udemy.model;
 
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class UserActivity extends User {
 
 	@JsonProperty("report_date")
-	private LocalDateTime reportDate;
+	private OffsetDateTime reportDate;
 
 	@JsonProperty("user_joined_date")
-	private LocalDateTime joinDate;
+	private OffsetDateTime joinDate;
 
 	@JsonProperty("num_new_enrolled_courses")
 	private Integer numberOfNewEnrolledCourses;
@@ -31,25 +31,25 @@ public class UserActivity extends User {
 	private Double numberOfWebVisitedDays;
 
 	@JsonProperty("last_date_visit")
-	private LocalDateTime lastVisitDate;
+	private OffsetDateTime lastVisitDate;
 
 	public UserActivity() {
 	}
 
-	public LocalDateTime getReportDate() {
+	public OffsetDateTime getReportDate() {
 		return reportDate;
 	}
 
-	public void setReportDate(LocalDateTime reportDate) {
+	public void setReportDate(OffsetDateTime reportDate) {
 		this.reportDate = reportDate;
 	}
 
 	/** This is the date the user joined the portal */
-	public LocalDateTime getJoinDate() {
+	public OffsetDateTime getJoinDate() {
 		return joinDate;
 	}
 
-	public void setJoinDate(LocalDateTime joinDate) {
+	public void setJoinDate(OffsetDateTime joinDate) {
 		this.joinDate = joinDate;
 	}
 
@@ -130,11 +130,11 @@ public class UserActivity extends User {
 	 * Date of Last Visit (UTC), this is the date that the user last visited the UfB
 	 * portal
 	 */
-	public LocalDateTime getLastVisitDate() {
+	public OffsetDateTime getLastVisitDate() {
 		return lastVisitDate;
 	}
 
-	public void setLastVisitDate(LocalDateTime lastVisitDate) {
+	public void setLastVisitDate(OffsetDateTime lastVisitDate) {
 		this.lastVisitDate = lastVisitDate;
 	}
 }
