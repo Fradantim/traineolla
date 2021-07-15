@@ -16,5 +16,5 @@ Servicio para comunicarse con Udemy.
 - ✔️ /courses/list
 - ✔️ /courses/{course-id}
 - ✔️ /analytics/user-activity/
-- ⏲ /analytics/user-course-activity/
+- ✔️ /analytics/user-course-activity/
 - ⏲ /analytics/user-progress/

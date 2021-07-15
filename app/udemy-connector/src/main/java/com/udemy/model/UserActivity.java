@@ -4,31 +4,13 @@ import java.time.LocalDateTime;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-public class UserActivity extends UdemyObject {
-
-	@JsonProperty("user_name")
-	private String username;
-
-	@JsonProperty("user_surname")
-	private String userSurname;
+public class UserActivity extends User {
 
 	@JsonProperty("report_date")
 	private LocalDateTime reportDate;
 
-	@JsonProperty("user_email")
-	private String userEmail;
-
-	@JsonProperty("user_role")
-	private String userRole;
-
-	@JsonProperty("user_is_deactivated")
-	private Boolean deactivated;
-
 	@JsonProperty("user_joined_date")
 	private LocalDateTime joinDate;
-
-	@JsonProperty("user_external_id")
-	private String userExternaId;
 
 	@JsonProperty("num_new_enrolled_courses")
 	private Integer numberOfNewEnrolledCourses;
@@ -45,9 +27,6 @@ public class UserActivity extends UdemyObject {
 	@JsonProperty("num_completed_lectures")
 	private Integer numberOfCompletedLectures;
 
-	@JsonProperty("num_video_consumed_minutes")
-	private Double numberOfVideoConsumedMinutes;
-
 	@JsonProperty("num_web_visited_days")
 	private Double numberOfWebVisitedDays;
 
@@ -55,22 +34,6 @@ public class UserActivity extends UdemyObject {
 	private LocalDateTime lastVisitDate;
 
 	public UserActivity() {
-	}
-
-	public String getUsername() {
-		return username;
-	}
-
-	public void setUsername(String username) {
-		this.username = username;
-	}
-
-	public String getUserSurname() {
-		return userSurname;
-	}
-
-	public void setUserSurname(String userSurname) {
-		this.userSurname = userSurname;
 	}
 
 	public LocalDateTime getReportDate() {
@@ -81,34 +44,6 @@ public class UserActivity extends UdemyObject {
 		this.reportDate = reportDate;
 	}
 
-	public String getUserEmail() {
-		return userEmail;
-	}
-
-	public void setUserEmail(String userEmail) {
-		this.userEmail = userEmail;
-	}
-
-	/** This is the user’s role. Possible values are student, admin or owner. */
-	public String getUserRole() {
-		return userRole;
-	}
-
-	public void setUserRole(String userRole) {
-		this.userRole = userRole;
-	}
-
-	/**
-	 * Indicates if user’s account has been deactivated in the organization site.
-	 */
-	public Boolean isDeactivated() {
-		return deactivated;
-	}
-
-	public void setDeactivated(Boolean deactivated) {
-		this.deactivated = deactivated;
-	}
-
 	/** This is the date the user joined the portal */
 	public LocalDateTime getJoinDate() {
 		return joinDate;
@@ -116,18 +51,6 @@ public class UserActivity extends UdemyObject {
 
 	public void setJoinDate(LocalDateTime joinDate) {
 		this.joinDate = joinDate;
-	}
-
-	/**
-	 * This is the ID specific to the organization to make it easier to identify
-	 * users in reports
-	 */
-	public String getUserExternaId() {
-		return userExternaId;
-	}
-
-	public void setUserExternaId(String userExternaId) {
-		this.userExternaId = userExternaId;
 	}
 
 	/**
@@ -189,20 +112,6 @@ public class UserActivity extends UdemyObject {
 
 	public void setNumberOfCompletedLectures(Integer numberOfCompletedLectures) {
 		this.numberOfCompletedLectures = numberOfCompletedLectures;
-	}
-
-	/**
-	 * Minutes Video Consumed, this is the total number of minutes of video lectures
-	 * the user has consumed. It does not include any estimation of time spent on
-	 * other materials such as slides or ebooks. If the user watches some videos
-	 * multiple times then each time will contribute to the total in, this report
-	 */
-	public Double getNumberOfVideoConsumedMinutes() {
-		return numberOfVideoConsumedMinutes;
-	}
-
-	public void setNumberOfVideoConsumedMinutes(Double numberOfVideoConsumedMinutes) {
-		this.numberOfVideoConsumedMinutes = numberOfVideoConsumedMinutes;
 	}
 
 	/**

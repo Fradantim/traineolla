@@ -34,6 +34,7 @@ public class Course extends UdemyObject {
 	private Integer numberOfPracticeTests;
 
 	public Course() {
+		super();
 	}
 
 	/** Course Id, this is a unique identifier for the course */
