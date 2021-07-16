@@ -1,33 +1,33 @@
 package com.udemy.model;
 
-import java.util.List;
 import java.util.Map;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+/** Base Course POJO from /courses/{course-id} Udemy endpoint */
 public class Course extends UdemyObject {
 
+	/*
+	"caption_languages": [
+        "English [Auto]",
+        "Portuguese [Auto]",
+        "Spanish [Auto]"
+    ],
+    
+    "is_practice_test_course": false,
+    "was_ever_published": true,
+    
+	*/
+	
 	private Integer id;
 	private String title;
 	private String description;
 	private String url;
 	@JsonProperty("estimated_content_length")
 	private String estimatedContentLength;
-	private List<String> categories;
 	@JsonProperty("num_lectures")
 	private Integer numberOfLectures;
-	@JsonProperty("num_videos")
-	private Integer numberOfVideos;
-	@JsonProperty("promo_video_url")
-	private List<Video> promoVideoUrl;
 	private Map<String, Object> locale;
-	private List<String> instructors;
-	private Map<String, Object> requirements;
-	@JsonProperty("what_you_will_learn")
-	private Map<String, Object> whatYouWillLearn;
-	private Map<String, Object> images;
-	@JsonProperty("mobile_native_deeplink")
-	private String mobileNativeDeepLink;
 	@JsonProperty("num_quizzes")
 	private Integer numberOfQuizzes;
 	@JsonProperty("num_practice_tests")
@@ -80,14 +80,6 @@ public class Course extends UdemyObject {
 		this.estimatedContentLength = estimatedContentLength;
 	}
 
-	public List<String> getCategories() {
-		return categories;
-	}
-
-	public void setCategories(List<String> categories) {
-		this.categories = categories;
-	}
-
 	/** The number of lectures this course comprises of */
 	public Integer getNumberOfLectures() {
 		return numberOfLectures;
@@ -97,24 +89,6 @@ public class Course extends UdemyObject {
 		this.numberOfLectures = numberOfLectures;
 	}
 
-	/** The number of videos contained in this course */
-	public Integer getNumberOfVideos() {
-		return numberOfVideos;
-	}
-
-	public void setNumberOfVideos(Integer numberOfVideos) {
-		this.numberOfVideos = numberOfVideos;
-	}
-
-	/** URL of the promotional video(s) */
-	public List<Video> getPromoVideoUrl() {
-		return promoVideoUrl;
-	}
-
-	public void setPromoVideoUrl(List<Video> promoVideoUrl) {
-		this.promoVideoUrl = promoVideoUrl;
-	}
-
 	/** Indicates the language of the course (e.g. es_ES) **/
 	public Map<String, Object> getLocale() {
 		return locale;
@@ -122,56 +96,6 @@ public class Course extends UdemyObject {
 
 	public void setLocale(Map<String, Object> locale) {
 		this.locale = locale;
-	}
-
-	public List<String> getInstructors() {
-		return instructors;
-	}
-
-	public void setInstructors(List<String> instructors) {
-		this.instructors = instructors;
-	}
-
-	/** A description of requirements for this course */
-	public Map<String, Object> getRequirements() {
-		return requirements;
-	}
-
-	public void setRequirements(Map<String, Object> requirements) {
-		this.requirements = requirements;
-	}
-
-	/**
-	 * A description of the skills and knowledge which will be learned on this
-	 * course
-	 */
-	public Map<String, Object> getWhatYouWillLearn() {
-		return whatYouWillLearn;
-	}
-
-	public void setWhatYouWillLearn(Map<String, Object> whatYouWillLearn) {
-		this.whatYouWillLearn = whatYouWillLearn;
-	}
-
-	/** A list of sizes and urls pointing to the course image locations */
-	public Map<String, Object> getImages() {
-		return images;
-	}
-
-	public void setImages(Map<String, Object> images) {
-		this.images = images;
-	}
-
-	/**
-	 * This URL will open the course in the Udemy for Business native app for
-	 * Android or iOS, if installed
-	 */
-	public String getMobileNativeDeepLink() {
-		return mobileNativeDeepLink;
-	}
-
-	public void setMobileNativeDeepLink(String mobileNativeDeepLink) {
-		this.mobileNativeDeepLink = mobileNativeDeepLink;
 	}
 
 	/** Number of quizzes contained in the course */
