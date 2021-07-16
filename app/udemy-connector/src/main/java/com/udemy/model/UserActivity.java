@@ -32,6 +32,9 @@ public class UserActivity extends User {
 
 	@JsonProperty("last_date_visit")
 	private OffsetDateTime lastVisitDate;
+	
+	@JsonProperty("num_video_consumed_minutes")
+	private Double numberOfVideoConsumedMinutes;
 
 	public UserActivity() {
 	}
@@ -136,5 +139,19 @@ public class UserActivity extends User {
 
 	public void setLastVisitDate(OffsetDateTime lastVisitDate) {
 		this.lastVisitDate = lastVisitDate;
+	}
+	
+	/**
+	 * Minutes Video Consumed, this is the total number of minutes of video lectures
+	 * the user has consumed. It does not include any estimation of time spent on
+	 * other materials such as slides or ebooks. If the user watches some videos
+	 * multiple times then each time will contribute to the total in, this report
+	 */
+	public Double getNumberOfVideoConsumedMinutes() {
+		return numberOfVideoConsumedMinutes;
+	}
+
+	public void setNumberOfVideoConsumedMinutes(Double numberOfVideoConsumedMinutes) {
+		this.numberOfVideoConsumedMinutes = numberOfVideoConsumedMinutes;
 	}
 }

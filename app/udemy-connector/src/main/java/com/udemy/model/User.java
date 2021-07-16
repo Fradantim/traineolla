@@ -22,9 +22,6 @@ public class User extends UdemyObject {
 	@JsonProperty("user_external_id")
 	private String userExternaId;
 
-	@JsonProperty("num_video_consumed_minutes")
-	private Double numberOfVideoConsumedMinutes;
-
 	public User() {
 		super();
 	}
@@ -85,19 +82,5 @@ public class User extends UdemyObject {
 
 	public void setUserExternaId(String userExternaId) {
 		this.userExternaId = userExternaId;
-	}
-
-	/**
-	 * Minutes Video Consumed, this is the total number of minutes of video lectures
-	 * the user has consumed. It does not include any estimation of time spent on
-	 * other materials such as slides or ebooks. If the user watches some videos
-	 * multiple times then each time will contribute to the total in, this report
-	 */
-	public Double getNumberOfVideoConsumedMinutes() {
-		return numberOfVideoConsumedMinutes;
-	}
-
-	public void setNumberOfVideoConsumedMinutes(Double numberOfVideoConsumedMinutes) {
-		this.numberOfVideoConsumedMinutes = numberOfVideoConsumedMinutes;
 	}
 }

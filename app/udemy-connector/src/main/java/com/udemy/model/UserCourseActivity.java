@@ -44,6 +44,9 @@ public class UserCourseActivity extends User {
 
 	@JsonProperty("assigned_by")
 	private String assignedBy;
+	
+	@JsonProperty("num_video_consumed_minutes")
+	private Double numberOfVideoConsumedMinutes;
 
 	public UserCourseActivity() {
 		super();
@@ -179,5 +182,19 @@ public class UserCourseActivity extends User {
 
 	public void setAssignedBy(String assignedBy) {
 		this.assignedBy = assignedBy;
+	}
+	
+	/**
+	 * Minutes Video Consumed, this is the total number of minutes of video lectures
+	 * the user has consumed. It does not include any estimation of time spent on
+	 * other materials such as slides or ebooks. If the user watches some videos
+	 * multiple times then each time will contribute to the total in, this report
+	 */
+	public Double getNumberOfVideoConsumedMinutes() {
+		return numberOfVideoConsumedMinutes;
+	}
+
+	public void setNumberOfVideoConsumedMinutes(Double numberOfVideoConsumedMinutes) {
+		this.numberOfVideoConsumedMinutes = numberOfVideoConsumedMinutes;
 	}
 }
