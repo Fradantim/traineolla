@@ -1,5 +1,8 @@
 package com.frager.oreport.udemyconnector.client.impl;
 
+import java.util.List;
+import java.util.Map.Entry;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
@@ -60,14 +63,16 @@ public class UdemyClientImpl implements UdemyClient {
 	 * Retorna un nuevo {@link MultiValueMap} con los elementos de specificValues y
 	 * defaultValues.
 	 */
+	@SuppressWarnings("unchecked")
 	private <S, T> MultiValueMap<S, T> mixMaps(@Nullable MultiValueMap<S, T> specificValues,
 			@NonNull MultiValueMap<S, T> defaultValues) {
 		if (specificValues == null || specificValues.isEmpty())
 			return defaultValues;
 
 		MultiValueMap<S, T> finalValues = new MultiValueMapAdapter<>(specificValues);
-		finalValues.addAll(defaultValues);
-
+		for (Entry<S, List<T>> entry : specificValues.entrySet()) {
+			finalValues.addIfAbsent(entry.getKey(), (T) entry.getValue());
+		}
 		return finalValues;
 	}
 
@@ -75,25 +80,17 @@ public class UdemyClientImpl implements UdemyClient {
 	public Mono<SingleCourse> getCourseById(Integer id) {
 		return getCourseById(id, null);
 	}
-	
-	
-	@Autowired // PLAN B
+
+	@Autowired
 	@Qualifier("udemy-client-webclient-builder")
 	private WebClient.Builder webClientBuilder;
 
 	@Override
 	public Mono<SingleCourse> getCourseById(Integer id, MultiValueMap<String, String> queryParams) {
 		MultiValueMap<String, String> finalQueryParams = mixMaps(queryParams, courseURLQueryParams);
-		/* PLAN A
-		WebClient webClient = WebClient.builder().baseUrl(courseURL).defaultUriVariables(finalQueryParams)
-				.defaultHeaders(defaultHeaders -> defaultHeaders.addAll(httpHeadersForUdemy)).build();
-		return webClient.get().uri(uriBuilder -> uriBuilder.queryParam("course.id", id).build()).retrieve()
+		return webClientBuilder.build().get()
+				.uri(courseURL, uriF -> uriF.queryParams(finalQueryParams).path(String.valueOf(id)).build()).retrieve()
 				.bodyToMono(SingleCourse.class);
-		*/
-		
-		// PLAN B
-		return webClientBuilder.build().get().uri(courseURL, uriF -> uriF.queryParams(finalQueryParams).path(String.valueOf(id)).build())
-				.retrieve().bodyToMono(SingleCourse.class);
 	}
 
 	@Override
