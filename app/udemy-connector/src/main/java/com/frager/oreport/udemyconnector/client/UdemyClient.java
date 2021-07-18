@@ -16,7 +16,7 @@ public interface UdemyClient {
 
 	public Mono<SingleCourse> getCourseById(Integer id, @Nullable MultiValueMap<String, String> queryParams);
 
-	public PageResponse<ListedCourse> getCourses(@Nullable MultiValueMap<String, String> queryParams);
+	public Mono<PageResponse<ListedCourse>> getCourses(@Nullable MultiValueMap<String, String> queryParams);
 
 	public PageResponse<UserActivity> getUserActivity(@Nullable MultiValueMap<String, String> queryParams);
 

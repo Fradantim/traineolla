@@ -1,6 +1,7 @@
 package com.frager.oreport.udemyconnector.web.rest;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -17,15 +18,14 @@ public class CourseResource {
 
 	@Autowired
 	private CourseService courseService;
-	
+
 	@GetMapping("/{id}")
 	public Mono<Course> getById(@PathVariable("id") Integer id) {
 		return courseService.getCourseById(id);
 	}
-	
-	@GetMapping("")
+
+	@GetMapping(produces = MediaType.APPLICATION_NDJSON_VALUE)
 	public Object getAll() {
-		// TODO Flux paginado?
-		return null;
+		return courseService.getCourses();
 	}
 }

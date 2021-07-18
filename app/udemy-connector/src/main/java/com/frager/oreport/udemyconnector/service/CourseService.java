@@ -5,6 +5,7 @@ import org.springframework.util.MultiValueMap;
 
 import com.frager.oreport.udemyconnector.model.Course;
 
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 public interface CourseService {
@@ -13,4 +14,7 @@ public interface CourseService {
 
 	public Mono<Course> getCourseById(Integer id, @Nullable MultiValueMap<String, String> queryParams);
 
+	public Flux<Course> getCourses();
+	
+	public Flux<Course> getCourses(@Nullable  MultiValueMap<String, String> queryParams);
 }

@@ -6,6 +6,7 @@ import java.util.Map.Entry;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Component;
@@ -25,6 +26,9 @@ import reactor.core.publisher.Mono;
 
 @Component
 public class UdemyClientImpl implements UdemyClient {
+
+	private static final ParameterizedTypeReference<PageResponse<ListedCourse>> PAGE_OF_COURSE_TYPE_REF = new ParameterizedTypeReference<PageResponse<ListedCourse>>() {
+	};
 
 	@Value("${udemy.course.url}")
 	private String courseURL;
@@ -90,11 +94,11 @@ public class UdemyClientImpl implements UdemyClient {
 	}
 
 	@Override
-	public PageResponse<ListedCourse> getCourses(MultiValueMap<String, String> queryParams) {
-		// MultiValueMap<String, String> finalQueryParams = mixMaps(queryParams,
-		// coursesURLQueryParams);
-		// TODO Auto-generated method stub
-		return null;
+	public Mono<PageResponse<ListedCourse>> getCourses(MultiValueMap<String, String> queryParams) {
+		System.out.println("CONSULTANDO! " + ((queryParams != null) ? queryParams.get("page"):""));
+		MultiValueMap<String, String> finalQueryParams = mixMaps(queryParams, coursesURLQueryParams);
+		return webClientBuilder.build().get().uri(coursesURL, uriF -> uriF.queryParams(finalQueryParams).build())
+				.retrieve().bodyToMono(PAGE_OF_COURSE_TYPE_REF);
 	}
 
 	@Override
