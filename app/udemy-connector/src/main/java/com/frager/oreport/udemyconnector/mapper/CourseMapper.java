@@ -6,6 +6,10 @@ import com.udemy.model.SingleCourse;
 
 public class CourseMapper {
 
+	private CourseMapper() {
+		super();
+	}
+
 	private static Course baseCourse(com.udemy.model.Course udemyCourse) {
 		Course course = new Course();
 		course.setId(udemyCourse.getId());
@@ -13,7 +17,7 @@ public class CourseMapper {
 		try {
 			// TODO reemplazar por set-get cuando udemyCourse.getEstimatedContentLength()
 			// sea integer
-			course.setEstimatedContentLength(new Integer(udemyCourse.getEstimatedContentLength()));
+			course.setEstimatedContentLength(Integer.parseInt(udemyCourse.getEstimatedContentLength()));
 		} catch (NumberFormatException e) {
 			// no-op
 		}
@@ -28,14 +32,12 @@ public class CourseMapper {
 	}
 
 	public static Course fromSingleCourse(SingleCourse udemyCourse) {
-		Course course = baseCourse(udemyCourse);
 		// reservado para atributos especificos de SingleCourse
-		return course;
+		return baseCourse(udemyCourse);
 	}
 
 	public static Course fromListedCourse(ListedCourse udemyCourse) {
-		Course course = baseCourse(udemyCourse);
 		// reservado para atributos especificos de ListedCourse
-		return course;
+		return baseCourse(udemyCourse);
 	}
 }

@@ -14,6 +14,10 @@ import org.springframework.util.MultiValueMap;
 
 public class URLUtils {
 
+	private URLUtils() {
+		super();
+	}
+
 	private static final Logger logger = LoggerFactory.getLogger(URLUtils.class);
 
 	/**

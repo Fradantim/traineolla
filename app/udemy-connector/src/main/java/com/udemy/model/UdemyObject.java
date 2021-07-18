@@ -7,6 +7,7 @@ public class UdemyObject {
 	private String clazz;
 	
 	public UdemyObject() {
+		super();
 	}
 
 	/** Udemy class name */

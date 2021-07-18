@@ -34,8 +34,7 @@ public class CourseServiceImpl implements CourseService {
 	@Override
 	public Mono<Course> getCourseById(Integer id, MultiValueMap<String, String> queryParams) {
 		Mono<SingleCourse> singleCourseMono = udemyClient.getCourseById(id, queryParams);
-		Mono<Course> courseMono = singleCourseMono.map(CourseMapper::fromSingleCourse);
-		return courseMono;
+		return singleCourseMono.map(CourseMapper::fromSingleCourse);
 	}
 
 	public Flux<Course> getCourses() {
@@ -62,13 +61,4 @@ public class CourseServiceImpl implements CourseService {
 
 		return currentFlux;
 	}
-
-	private static Course atoe(PageResponse<ListedCourse> l) {
-		return null;
-	}
-
-	private static Course atoi(ListedCourse l) {
-		return null;
-	}
-
 }
