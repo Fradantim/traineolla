@@ -32,6 +32,15 @@ Valores por defecto (y ejemplos) en [application.properties](src/main/resources/
 | Nombre | Detalle |
 | - | - |
 | `env.prop.file` | Ruta absoluta a un archivo *.properties* del que se se pueden asignar las variables de entorno. |
+| `request.udemy.params.identifier` | Los request-param que empiecen con este valor serán incluidos directamente en la consulta a Udemy. |
+| `springdoc.api-docs.request.udemy.params.description` | Documentacion de OpenApi. |
+| `springdoc.api-docs.enabled` | (OpenApi) Exponer o no el endpoint de api-docs. |
+| `springdoc.api-docs.ext-docs` | (OpenApi) Información de documentos externos. |
+| `springdoc.api-docs.license` | (OpenApi) Información de la licencia. |
+| `springdoc.api-docs.path` | (OpenApi) Endpoint de api-docs. |
+| `springdoc.api-docs.title` | (OpenApi) Titulo de los api-docs. |
+| `springdoc.swagger-ui.enabled` | (OpenApi) Exponer o no el endpoint de Swagger-ui. |
+| `springdoc.swagger-ui.path` | (OpenApi) Endpoint de Swagger-ui. |
 | `udemy.default-page-size` | Cantidad elementos por página retornados por cada consulta a Udemy. Udemy indica no superar 100. <br /> **IMPORTANTE**: Ver [Cuestiones de recursos](#cuestiones-de-recursos) |
 | `udemy.course.url` | Url de la lista de catalogo del portal de aprendizaje de Udemy, ingresando por id de curso. |
 | `udemy.course.url.query-params` | Argumentos de busqueda para acotar resultados o especificar atributos a recuperar al consultar contra `udemy.course.url`. |
@@ -43,13 +52,6 @@ Valores por defecto (y ejemplos) en [application.properties](src/main/resources/
 | `udemy.user-course-activity.url.query-params` | Argumentos de busqueda para acotar resultados o especificar atributos a recuperar al consultar contra `udemy.user-course-activity.url`. |
 | `udemy.user-progress.url` | Url para actividad de progreso de usuarios por curso del portal de aprendizaje de Udemy. |
 | `udemy.user-progress.url.query-params` | Argumentos de busqueda para acotar resultados o especificar atributos a recuperar al consultar contra `udemy.user-progress.url`. |
-| `springdoc.api-docs.enabled` | (OpenApi) Exponer o no el endpoint de api-docs. |
-| `springdoc.api-docs.path` | (OpenApi) Endpoint de api-docs. |
-| `springdoc.api-docs.title` | (OpenApi) Titulo de los api-docs. |
-| `springdoc.api-docs.license` | (OpenApi) Información de la licencia. |
-| `springdoc.api-docs.ext-docs` | (OpenApi) Información de documentos externos. |
-| `springdoc.swagger-ui.enabled` | (OpenApi) Exponer o no el endpoint de Swagger-ui. |
-| `springdoc.swagger-ui.path` | (OpenApi) Endpoint de Swagger-ui.
 
 ---
 
