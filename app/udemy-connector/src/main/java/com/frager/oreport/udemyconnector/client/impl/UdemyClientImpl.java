@@ -31,34 +31,34 @@ public class UdemyClientImpl implements UdemyClient {
 	};
 
 	@Value("${udemy.course.url}")
-	private String courseURL;
+	private String courseUrl;
 
 	@Value("#{${udemy.course.url.query-params}}")
-	private MultiValueMap<String, String> courseURLQueryParams;
+	private MultiValueMap<String, String> courseUrlQueryParams;
 
 	@Value("${udemy.courses.url}")
-	private String coursesURL;
+	private String coursesUrl;
 
 	@Value("#{${udemy.courses.url.query-params}}")
-	private MultiValueMap<String, String> coursesURLQueryParams;
+	private MultiValueMap<String, String> coursesUrlQueryParams;
 
 	@Value("${udemy.user-activity.url}")
-	private String userActivityURL;
+	private String userActivityUrl;
 
 	@Value("#{${udemy.user-activity.url.query-params}}")
-	private MultiValueMap<String, String> userActivityURLQueryParams;
+	private MultiValueMap<String, String> userActivityUrlQueryParams;
 
 	@Value("${udemy.user-course-activity.url}")
-	private String userCourseActivityURL;
+	private String userCourseActivityUrl;
 
 	@Value("#{${udemy.user-course-activity.url.query-params}}")
-	private MultiValueMap<String, String> userCourseActivityURLQueryParams;
+	private MultiValueMap<String, String> userCourseActivityUrlQueryParams;
 
 	@Value("${udemy.user-progress.url}")
-	private String UserProgressURL;
+	private String userProgressUrl;
 
 	@Value("#{${udemy.user-progress.url.query-params}}")
-	private MultiValueMap<String, String> UserProgressURLQueryParams;
+	private MultiValueMap<String, String> userProgressUrlQueryParams;
 
 	public UdemyClientImpl() {
 		super();
@@ -82,29 +82,28 @@ public class UdemyClientImpl implements UdemyClient {
 	}
 
 	@Autowired
-	@Qualifier("udemy-client-webclient-builder")
-	private WebClient.Builder webClientBuilder;
+	@Qualifier("udemy-webclient")
+	private WebClient webClient;
 
 	@Override
 	public Mono<SingleCourse> getCourseById(Integer id, MultiValueMap<String, String> queryParams) {
-		MultiValueMap<String, String> finalQueryParams = mixMaps(queryParams, courseURLQueryParams);
-		return webClientBuilder.build().get()
-				.uri(courseURL, uriF -> uriF.queryParams(finalQueryParams).path(String.valueOf(id)).build()).retrieve()
+		MultiValueMap<String, String> finalQueryParams = mixMaps(queryParams, courseUrlQueryParams);
+		return webClient.get()
+				.uri(courseUrl, uriF -> uriF.queryParams(finalQueryParams).path(String.valueOf(id)).build()).retrieve()
 				.bodyToMono(SingleCourse.class);
 	}
 
 	@Override
 	public Mono<PageResponse<ListedCourse>> getCourses(MultiValueMap<String, String> queryParams) {
-		System.out.println("CONSULTANDO! " + ((queryParams != null) ? queryParams.get("page"):""));
-		MultiValueMap<String, String> finalQueryParams = mixMaps(queryParams, coursesURLQueryParams);
-		return webClientBuilder.build().get().uri(coursesURL, uriF -> uriF.queryParams(finalQueryParams).build())
-				.retrieve().bodyToMono(PAGE_OF_COURSE_TYPE_REF);
+		MultiValueMap<String, String> finalQueryParams = mixMaps(queryParams, coursesUrlQueryParams);
+		return webClient.get().uri(coursesUrl, uriF -> uriF.queryParams(finalQueryParams).build()).retrieve()
+				.bodyToMono(PAGE_OF_COURSE_TYPE_REF);
 	}
 
 	@Override
 	public PageResponse<UserActivity> getUserActivity(MultiValueMap<String, String> queryParams) {
 		// MultiValueMap<String, String> finalQueryParams = mixMaps(queryParams,
-		// userActivityURLQueryParams);
+		// userActivityUrlQueryParams);
 		// TODO Auto-generated method stub
 		return null;
 	}
@@ -112,7 +111,7 @@ public class UdemyClientImpl implements UdemyClient {
 	@Override
 	public PageResponse<UserCourseActivity> getUserCourseActivity(MultiValueMap<String, String> queryParams) {
 		// MultiValueMap<String, String> finalQueryParams = mixMaps(queryParams,
-		// userCourseActivityURLQueryParams);
+		// userCourseActivityUrlQueryParams);
 		// TODO Auto-generated method stub
 		return null;
 	}
@@ -120,7 +119,7 @@ public class UdemyClientImpl implements UdemyClient {
 	@Override
 	public PageResponse<UserProgress> getUserProgress(MultiValueMap<String, String> queryParams) {
 		// MultiValueMap<String, String> finalQueryParams = mixMaps(queryParams,
-		// UserProgressURLQueryParams);
+		// userProgressUrlQueryParams);
 		// TODO Auto-generated method stub
 		return null;
 	}
