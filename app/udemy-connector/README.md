@@ -29,11 +29,12 @@ Servicio para comunicarse con Udemy.
 
 Valores por defecto (y ejemplos) en [application.properties](src/main/resources/application.properties).
 
+En `env.prop.file` se puede asignar una ruta absoluta a un archivo *.properties* del que se se pueden asignar / reemplazar todas las variables de entorno.
+
 | Nombre | Detalle |
 | - | - |
-| `env.prop.file` | Ruta absoluta a un archivo *.properties* del que se se pueden asignar las variables de entorno. |
+| `api-docs.request.udemy.params.description` | Documentacion de OpenApi. |
 | `request.udemy.params.identifier` | Los request-param que empiecen con este valor serán incluidos directamente en la consulta a Udemy. |
-| `springdoc.api-docs.request.udemy.params.description` | Documentacion de OpenApi. |
 | `springdoc.api-docs.enabled` | (OpenApi) Exponer o no el endpoint de api-docs. |
 | `springdoc.api-docs.ext-docs` | (OpenApi) Información de documentos externos. |
 | `springdoc.api-docs.license` | (OpenApi) Información de la licencia. |

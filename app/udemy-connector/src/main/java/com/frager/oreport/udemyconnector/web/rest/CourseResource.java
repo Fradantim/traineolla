@@ -40,7 +40,7 @@ public class CourseResource {
 	// argumento
 	@GetMapping("/{id}")
 	public Mono<Course> getById(@Parameter(description = "Id del curso a buscar") @PathVariable("id") Integer id,
-			@Parameter(description = "${springdoc.api-docs.request.udemy.params.description}") @RequestParam(defaultValue = "") Map<String, String> requestParams) {
+			@Parameter(description = "${api-docs.request.udemy.params.description}") @RequestParam(defaultValue = "") Map<String, String> requestParams) {
 		return courseService.getCourseById(id, getUdemySpecificRequestParams(requestParams));
 	}
 
@@ -48,7 +48,7 @@ public class CourseResource {
 	// argumento
 	@GetMapping(produces = MediaType.APPLICATION_NDJSON_VALUE)
 	public Object getAll(
-			@Parameter(description = "${springdoc.api-docs.request.udemy.params.description}") @RequestParam(defaultValue = "") Map<String, String> requestParams) {
+			@Parameter(description = "${api-docs.request.udemy.params.description}") @RequestParam(defaultValue = "") Map<String, String> requestParams) {
 		return courseService.getCourses(getUdemySpecificRequestParams(requestParams));
 	}
 
