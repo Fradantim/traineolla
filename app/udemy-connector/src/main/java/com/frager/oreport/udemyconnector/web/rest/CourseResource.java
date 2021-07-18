@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.frager.oreport.udemyconnector.model.Course;
 import com.frager.oreport.udemyconnector.service.CourseService;
 
+import io.swagger.v3.oas.annotations.Parameter;
 import reactor.core.publisher.Mono;
 
 @RestController
@@ -20,7 +21,7 @@ public class CourseResource {
 	private CourseService courseService;
 
 	@GetMapping("/{id}")
-	public Mono<Course> getById(@PathVariable("id") Integer id) {
+	public Mono<Course> getById(@Parameter(description = "Id del curso a buscar") @PathVariable("id") Integer id) {
 		return courseService.getCourseById(id);
 	}
 
