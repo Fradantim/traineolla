@@ -25,6 +25,7 @@ import reactor.core.publisher.Mono;
 
 @Component
 public class UdemyClientImpl implements UdemyClient {
+
 	@Value("${udemy.course.url}")
 	private String courseURL;
 
@@ -76,11 +77,6 @@ public class UdemyClientImpl implements UdemyClient {
 		return finalValues;
 	}
 
-	@Override
-	public Mono<SingleCourse> getCourseById(Integer id) {
-		return getCourseById(id, null);
-	}
-
 	@Autowired
 	@Qualifier("udemy-client-webclient-builder")
 	private WebClient.Builder webClientBuilder;
@@ -94,51 +90,34 @@ public class UdemyClientImpl implements UdemyClient {
 	}
 
 	@Override
-	public PageResponse<ListedCourse> getCourses() {
-		return getCourses(null);
-	}
-
-	@Override
 	public PageResponse<ListedCourse> getCourses(MultiValueMap<String, String> queryParams) {
-		MultiValueMap<String, String> finalQueryParams = mixMaps(queryParams, coursesURLQueryParams);
+		// MultiValueMap<String, String> finalQueryParams = mixMaps(queryParams,
+		// coursesURLQueryParams);
 		// TODO Auto-generated method stub
 		return null;
-	}
-
-	@Override
-	public PageResponse<UserActivity> getUserActivity() {
-		return getUserActivity(null);
 	}
 
 	@Override
 	public PageResponse<UserActivity> getUserActivity(MultiValueMap<String, String> queryParams) {
-		MultiValueMap<String, String> finalQueryParams = mixMaps(queryParams, userActivityURLQueryParams);
+		// MultiValueMap<String, String> finalQueryParams = mixMaps(queryParams,
+		// userActivityURLQueryParams);
 		// TODO Auto-generated method stub
 		return null;
-	}
-
-	@Override
-	public PageResponse<UserCourseActivity> getUserCourseActivity() {
-		return getUserCourseActivity(null);
 	}
 
 	@Override
 	public PageResponse<UserCourseActivity> getUserCourseActivity(MultiValueMap<String, String> queryParams) {
-		MultiValueMap<String, String> finalQueryParams = mixMaps(queryParams, userCourseActivityURLQueryParams);
+		// MultiValueMap<String, String> finalQueryParams = mixMaps(queryParams,
+		// userCourseActivityURLQueryParams);
 		// TODO Auto-generated method stub
 		return null;
-	}
-
-	@Override
-	public PageResponse<UserProgress> getUserProgress() {
-		return getUserProgress(null);
 	}
 
 	@Override
 	public PageResponse<UserProgress> getUserProgress(MultiValueMap<String, String> queryParams) {
-		MultiValueMap<String, String> finalQueryParams = mixMaps(queryParams, UserProgressURLQueryParams);
+		// MultiValueMap<String, String> finalQueryParams = mixMaps(queryParams,
+		// UserProgressURLQueryParams);
 		// TODO Auto-generated method stub
 		return null;
 	}
-
 }
