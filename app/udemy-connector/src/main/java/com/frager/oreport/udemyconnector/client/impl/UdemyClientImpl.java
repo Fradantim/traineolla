@@ -3,6 +3,8 @@ package com.frager.oreport.udemyconnector.client.impl;
 import java.util.List;
 import java.util.Map.Entry;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
@@ -26,6 +28,8 @@ import reactor.core.publisher.Mono;
 
 @Component
 public class UdemyClientImpl implements UdemyClient {
+
+	private static final Logger logger = LoggerFactory.getLogger(UdemyClientImpl.class);
 
 	private static final ParameterizedTypeReference<PageResponse<ListedCourse>> PAGE_OF_COURSE_TYPE_REF = new ParameterizedTypeReference<PageResponse<ListedCourse>>() {
 	};
@@ -71,13 +75,17 @@ public class UdemyClientImpl implements UdemyClient {
 	@SuppressWarnings("unchecked")
 	private <S, T> MultiValueMap<S, T> mixMaps(@Nullable MultiValueMap<S, T> specificValues,
 			@NonNull MultiValueMap<S, T> defaultValues) {
-		if (specificValues == null || specificValues.isEmpty())
+		if (specificValues == null || specificValues.isEmpty()) {
+			logger.debug("No se indicaron headers especificos, se retornan los default: {}", defaultValues);
 			return defaultValues;
+		}
 
 		MultiValueMap<S, T> finalValues = new MultiValueMapAdapter<>(specificValues);
 		for (Entry<S, List<T>> entry : specificValues.entrySet()) {
 			finalValues.addIfAbsent(entry.getKey(), (T) entry.getValue());
 		}
+
+		logger.debug("Se indicaron headers especificos, se retornan los mezclados: {}", finalValues);
 		return finalValues;
 	}
 
