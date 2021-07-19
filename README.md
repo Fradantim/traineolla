@@ -20,6 +20,12 @@
  :: Frager ::                    (v0.0.1)
 ```
 
+# Familia de aplicaciones
+
+| Nombre | Reporte Sonarqube |
+| - | - |
+| udemy-connector | [![Quality Gate Status](http://go.tempestad-online.com:19000/api/project_badges/measure?project=udemy-connector&metric=alert_status)](http://go.tempestad-online.com:19000/dashboard?id=udemy-connector) [![Reliability Rating](http://go.tempestad-online.com:19000/api/project_badges/measure?project=udemy-connector&metric=reliability_rating)](http://go.tempestad-online.com:19000/dashboard?id=udemy-connector) [![Security Rating](http://go.tempestad-online.com:19000/api/project_badges/measure?project=udemy-connector&metric=security_rating)](http://go.tempestad-online.com:19000/dashboard?id=udemy-connector) [![Technical Debt](http://go.tempestad-online.com:19000/api/project_badges/measure?project=udemy-connector&metric=sqale_index)](http://go.tempestad-online.com:19000/dashboard?id=udemy-connector) [![Vulnerabilities](http://go.tempestad-online.com:19000/api/project_badges/measure?project=udemy-connector&metric=vulnerabilities)](http://go.tempestad-online.com:19000/dashboard?id=udemy-connector)
+
 ## Aspectos técnicos
 
 - ✔️ Microservicios en su totalidad.

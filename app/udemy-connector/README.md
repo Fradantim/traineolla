@@ -5,11 +5,18 @@ Servicio para comunicarse con Udemy.
 # Tabla de contenidos
 - [udemy-connector](#udemy-connector)
 - [Tabla de contenidos](#tabla-de-contenidos)
+- [Reporte Sonarqube](#reporte-sonarqube)
 - [Variables de entorno](#variables-de-entorno)
   - [Variables de entorno obligatorias](#variables-de-entorno-obligatorias)
   - [Variables de entorno opcionales](#variables-de-entorno-opcionales)
 - [Cuestiones de recursos](#cuestiones-de-recursos)
 - [Respuestas de Udemy modeladas](#respuestas-de-udemy-modeladas)
+
+---
+
+# Reporte Sonarqube
+
+[![Quality Gate Status](http://go.tempestad-online.com:19000/api/project_badges/measure?project=udemy-connector&metric=alert_status)](http://go.tempestad-online.com:19000/dashboard?id=udemy-connector) [![Reliability Rating](http://go.tempestad-online.com:19000/api/project_badges/measure?project=udemy-connector&metric=reliability_rating)](http://go.tempestad-online.com:19000/dashboard?id=udemy-connector) [![Security Rating](http://go.tempestad-online.com:19000/api/project_badges/measure?project=udemy-connector&metric=security_rating)](http://go.tempestad-online.com:19000/dashboard?id=udemy-connector) [![Technical Debt](http://go.tempestad-online.com:19000/api/project_badges/measure?project=udemy-connector&metric=sqale_index)](http://go.tempestad-online.com:19000/dashboard?id=udemy-connector) [![Vulnerabilities](http://go.tempestad-online.com:19000/api/project_badges/measure?project=udemy-connector&metric=vulnerabilities)](http://go.tempestad-online.com:19000/dashboard?id=udemy-connector)
 
 ---
 
