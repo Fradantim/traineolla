@@ -14,14 +14,7 @@ public class CourseMapper {
 		Course course = new Course();
 		course.setId(udemyCourse.getId());
 		course.setDescription(udemyCourse.getDescription());
-		try {
-			// TODO reemplazar por set-get cuando udemyCourse.getEstimatedContentLength()
-			// sea integer
-			course.setEstimatedContentLength(Integer.parseInt(udemyCourse.getEstimatedContentLength()));
-		} catch (NumberFormatException e) {
-			// no-op
-		}
-
+		course.setEstimatedContentLength(udemyCourse.getEstimatedContentLength());
 		course.setNumberOfLectures(udemyCourse.getNumberOfLectures());
 		course.setNumberOfPracticeTests(udemyCourse.getNumberOfPracticeTests());
 		course.setNumberOfQuizzes(udemyCourse.getNumberOfQuizzes());

@@ -4,27 +4,14 @@ import java.util.Map;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-/** Base Course POJO from /courses/{course-id} Udemy endpoint */
 public class Course extends UdemyObject {
-
-	/*
-	"caption_languages": [
-        "English [Auto]",
-        "Portuguese [Auto]",
-        "Spanish [Auto]"
-    ],
-    
-    "is_practice_test_course": false,
-    "was_ever_published": true,
-    
-	*/
 	
 	private Integer id;
 	private String title;
 	private String description;
 	private String url;
 	@JsonProperty("estimated_content_length")
-	private String estimatedContentLength;
+	private Integer estimatedContentLength;
 	@JsonProperty("num_lectures")
 	private Integer numberOfLectures;
 	private Map<String, Object> locale;
@@ -72,11 +59,11 @@ public class Course extends UdemyObject {
 	}
 
 	/** This is an estimated length of time the content would take to be consumed */
-	public String getEstimatedContentLength() {
+	public Integer getEstimatedContentLength() {
 		return estimatedContentLength;
 	}
 
-	public void setEstimatedContentLength(String estimatedContentLength) {
+	public void setEstimatedContentLength(Integer estimatedContentLength) {
 		this.estimatedContentLength = estimatedContentLength;
 	}
 

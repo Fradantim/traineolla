@@ -2,7 +2,7 @@ package com.udemy.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-public class User extends UdemyObject {
+public class UserAnalytic extends UdemyObject {
 
 	@JsonProperty("user_name")
 	private String username;
@@ -22,7 +22,7 @@ public class User extends UdemyObject {
 	@JsonProperty("user_external_id")
 	private String userExternaId;
 
-	public User() {
+	public UserAnalytic() {
 		super();
 	}
 

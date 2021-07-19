@@ -4,9 +4,14 @@ import java.time.OffsetDateTime;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-public class UserCourseActivity extends User {
+/**
+ * POJO del endpoint
+ * <code>/organizations/{organization-id}/analytics/user-course-activity</code>
+ * de Udemy.
+ */
+public class UserCourseActivity extends UserAnalytic {
 
-	@JsonProperty("user_surname")
+	@JsonProperty("course_id")
 	private Integer courseId;
 
 	@JsonProperty("course_title")
@@ -44,7 +49,7 @@ public class UserCourseActivity extends User {
 
 	@JsonProperty("assigned_by")
 	private String assignedBy;
-	
+
 	@JsonProperty("num_video_consumed_minutes")
 	private Double numberOfVideoConsumedMinutes;
 
@@ -183,7 +188,7 @@ public class UserCourseActivity extends User {
 	public void setAssignedBy(String assignedBy) {
 		this.assignedBy = assignedBy;
 	}
-	
+
 	/**
 	 * Minutes Video Consumed, this is the total number of minutes of video lectures
 	 * the user has consumed. It does not include any estimation of time spent on

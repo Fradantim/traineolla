@@ -4,7 +4,12 @@ import java.time.OffsetDateTime;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-public class UserActivity extends User {
+/**
+ * POJO del endpoint
+ * <code>/organizations/{organization-id}/analytics/user-activity</code> de
+ * Udemy.
+ */
+public class UserActivity extends UserAnalytic {
 
 	@JsonProperty("report_date")
 	private OffsetDateTime reportDate;
@@ -32,7 +37,7 @@ public class UserActivity extends User {
 
 	@JsonProperty("last_date_visit")
 	private OffsetDateTime lastVisitDate;
-	
+
 	@JsonProperty("num_video_consumed_minutes")
 	private Double numberOfVideoConsumedMinutes;
 
@@ -140,7 +145,7 @@ public class UserActivity extends User {
 	public void setLastVisitDate(OffsetDateTime lastVisitDate) {
 		this.lastVisitDate = lastVisitDate;
 	}
-	
+
 	/**
 	 * Minutes Video Consumed, this is the total number of minutes of video lectures
 	 * the user has consumed. It does not include any estimation of time spent on

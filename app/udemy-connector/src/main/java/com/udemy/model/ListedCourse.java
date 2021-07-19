@@ -5,12 +5,12 @@ import java.util.Map;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-/** Course POJO from /organizations/{organization-id}/courses/list Udemy endpoint */
+/**
+ * POJO del endpoint <code>/organizations/{organization-id}/courses/list</code>
+ * de Udemy.
+ */
 public class ListedCourse extends Course {
 
-	/*
-	"estimated_content_length_video": 360,
-	*/
 	private List<String> categories;
 	@JsonProperty("num_videos")
 	private Integer numberOfVideos;
