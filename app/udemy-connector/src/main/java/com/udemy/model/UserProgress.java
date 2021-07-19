@@ -7,21 +7,23 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 /**
  * POJO del endpoint
  * <code>/organizations/{organization-id}/analytics/user-progress/</code> de
- * Udemy.
+ * Udemy. <br />
+ * Otros elementos interesantes disponibles: <br />
+ * <code>
+ * {"course_category": "", "course_subcategory":
+ * "", "num_subscribers": 15396,
+ * "avg_rating": 4.5122952, "avg_rating_recent": 4.577464, "rating": 4.577464,
+ * "num_reviews": 3534, "num_reviews_recent": 120, "completion_ratio": 0,
+ * "num_published_lectures": 35, "num_published_quizzes": 22,
+ * "num_curriculum_items": 57, "is_private": false, "quality_status":
+ * "approved", "is_banned": false, "is_published": true,"has_certificate": true,
+ * "created": "2017-07-03T18:31:22Z", "published_time": "2017-07-29T01:08:59Z",
+ * "instructional_level": "Intermediate Level", "instructional_level_simple":
+ * "Intermediate", "content_info": "2 total hours", "organization_id": null,
+ * "is_organization_only": false }
+ * </code>
  */
-public class UserProgress extends UserAnalytic {
-
-	@JsonProperty("course_id")
-	private Integer courseId;
-
-	@JsonProperty("course_title")
-	private String courseTitle;
-
-	@JsonProperty("course_category")
-	private String courseCategory;
-
-	@JsonProperty("course_subcategory")
-	private String courseSubcategory;
+public class UserProgress extends UserCourseAnalytic {
 
 	@JsonProperty("item_id")
 	private Integer itemId;
@@ -46,46 +48,6 @@ public class UserProgress extends UserAnalytic {
 
 	public UserProgress() {
 		super();
-	}
-
-	/** Course Id, to uniquely identify the course */
-	public Integer getCourseId() {
-		return courseId;
-	}
-
-	public void setCourseId(Integer courseId) {
-		this.courseId = courseId;
-	}
-
-	/** Title of the course */
-	public String getCourseTitle() {
-		return courseTitle;
-	}
-
-	public void setCourseTitle(String courseTitle) {
-		this.courseTitle = courseTitle;
-	}
-
-	/**
-	 * The first category of the course. <br />
-	 * Ordering: content subscription categories before custom categories, more
-	 * recently created categories before less recently created categories
-	 */
-	public String getCourseCategory() {
-		return courseCategory;
-	}
-
-	public void setCourseCategory(String courseCategory) {
-		this.courseCategory = courseCategory;
-	}
-
-	/** The subcategory of the {@link #getCourseCategory()} */
-	public String getCourseSubcategory() {
-		return courseSubcategory;
-	}
-
-	public void setCourseSubcategory(String courseSubcategory) {
-		this.courseSubcategory = courseSubcategory;
 	}
 
 	/** Unique identifier for the lecture/quiz */

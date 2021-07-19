@@ -9,19 +9,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  * <code>/organizations/{organization-id}/analytics/user-course-activity</code>
  * de Udemy.
  */
-public class UserCourseActivity extends UserAnalytic {
-
-	@JsonProperty("course_id")
-	private Integer courseId;
-
-	@JsonProperty("course_title")
-	private String courseTitle;
-
-	@JsonProperty("course_category")
-	private String courseCategory;
-
-	@JsonProperty("course_subcategory")
-	private String courseSubcategory;
+public class UserCourseActivity extends UserCourseAnalytic {
 
 	@JsonProperty("course_duration")
 	private Double courseDuration;
@@ -55,46 +43,6 @@ public class UserCourseActivity extends UserAnalytic {
 
 	public UserCourseActivity() {
 		super();
-	}
-
-	/** The Course Id to uniquely identify the course */
-	public Integer getCourseId() {
-		return courseId;
-	}
-
-	public void setCourseId(Integer courseId) {
-		this.courseId = courseId;
-	}
-
-	/** The title of the course */
-	public String getCourseTitle() {
-		return courseTitle;
-	}
-
-	public void setCourseTitle(String courseTitle) {
-		this.courseTitle = courseTitle;
-	}
-
-	/**
-	 * Indicates the first category of the course. Ordering: content subscription
-	 * categories before custom categories, more recently created categories before
-	 * less recently created categories
-	 */
-	public String getCourseCategory() {
-		return courseCategory;
-	}
-
-	public void setCourseCategory(String courseCategory) {
-		this.courseCategory = courseCategory;
-	}
-
-	/** Indicates the subcategory of the {@link #getCourseCategory()} */
-	public String getCourseSubcategory() {
-		return courseSubcategory;
-	}
-
-	public void setCourseSubcategory(String courseSubcategory) {
-		this.courseSubcategory = courseSubcategory;
 	}
 
 	/** Total duration of the video content of the course in minutes */
