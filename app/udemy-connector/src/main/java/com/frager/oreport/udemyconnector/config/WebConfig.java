@@ -6,6 +6,7 @@ import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpHeaders;
@@ -41,6 +42,7 @@ public class WebConfig {
 				.defaultHeaders(defaultHeaders -> defaultHeaders.addAll(httpHeadersForUdemy)).build();
 	}
 
+	@ConditionalOnProperty("springdoc.api-docs.enabled")
 	@Bean
 	public OpenAPI springShopOpenAPI(@Value("${application.name:missingAppName}") String appName,
 			@Value("${build.version:?.?.?}") String buildVer,
