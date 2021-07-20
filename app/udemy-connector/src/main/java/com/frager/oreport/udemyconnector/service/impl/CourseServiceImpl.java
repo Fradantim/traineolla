@@ -10,7 +10,7 @@ import com.frager.oreport.udemyconnector.client.UdemyClient;
 import com.frager.oreport.udemyconnector.mapper.CourseMapper;
 import com.frager.oreport.udemyconnector.model.Course;
 import com.frager.oreport.udemyconnector.service.CourseService;
-import com.frager.oreport.udemyconnector.utls.URLUtils;
+import com.frager.oreport.udemyconnector.utils.URLUtils;
 import com.udemy.model.ListedCourse;
 import com.udemy.model.PageResponse;
 import com.udemy.model.SingleCourse;

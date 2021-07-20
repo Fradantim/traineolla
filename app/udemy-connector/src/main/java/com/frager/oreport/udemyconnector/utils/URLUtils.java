@@ -1,10 +1,13 @@
-package com.frager.oreport.udemyconnector.utls;
+package com.frager.oreport.udemyconnector.utils;
 
 import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLDecoder;
 import java.nio.charset.Charset;
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -40,17 +43,20 @@ public class URLUtils {
 			return null;
 
 		MultiValueMap<String, String> queryParams = new LinkedMultiValueMap<>();
-		try {
-			for (String queryArg : url.getQuery().split("&")) {
-				String[] queryKeyVal = URLDecoder.decode(queryArg, Charset.defaultCharset().name()).split("=");
-
-				if (queryKeyVal.length == 2) {
-					queryParams.add(queryKeyVal[0], queryKeyVal[1]);
+		for (String queryArg : url.getQuery().split("&")) {
+			List<String> queryKeyVal = Arrays.asList(queryArg.split("=")).stream().map(kv -> {
+				try {
+					return URLDecoder.decode(kv, Charset.defaultCharset().name());
+				} catch (UnsupportedEncodingException e) {
+					// no deberia suceder
+					logger.error("Se intento decodear una url-query con charset erroneo?: {}", uri);
 				}
+				return "";
+			}).collect(Collectors.toList());
+
+			if (queryKeyVal.size() == 2) {
+				queryParams.add(queryKeyVal.get(0), queryKeyVal.get(1));
 			}
-		} catch (UnsupportedEncodingException e) {
-			logger.error("Se intento decodear una url-query con charset erroneo?: {}", uri);
-			return null;
 		}
 
 		return queryParams;
