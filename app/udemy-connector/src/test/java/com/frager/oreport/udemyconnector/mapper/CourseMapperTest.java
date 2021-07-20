@@ -3,8 +3,6 @@ package com.frager.oreport.udemyconnector.mapper;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.TestPropertySource;
 
 import com.frager.oreport.udemyconnector.model.Course;
 import com.udemy.model.ListedCourse;
