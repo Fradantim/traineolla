@@ -14,7 +14,7 @@ Proyecto pom padre que provee administracion de dependencias y plugins para proy
 
 # Reporte Sonarqube
 
-(pendiente)
+[![Bugs](http://go.tempestad-online.com:19000/api/project_badges/measure?project=oreport-parent&metric=bugs)](http://go.tempestad-online.com:19000/dashboard?id=oreport-parent) [![Code Smells](http://go.tempestad-online.com:19000/api/project_badges/measure?project=oreport-parent&metric=code_smells)](http://go.tempestad-online.com:19000/dashboard?id=oreport-parent) [![Coverage](http://go.tempestad-online.com:19000/api/project_badges/measure?project=oreport-parent&metric=coverage)](http://go.tempestad-online.com:19000/dashboard?id=oreport-parent) [![Duplicated Lines (%)](http://go.tempestad-online.com:19000/api/project_badges/measure?project=oreport-parent&metric=duplicated_lines_density)](http://go.tempestad-online.com:19000/dashboard?id=oreport-parent) [![Lines of Code](http://go.tempestad-online.com:19000/api/project_badges/measure?project=oreport-parent&metric=ncloc)](http://go.tempestad-online.com:19000/dashboard?id=oreport-parent) [![Maintainability Rating](http://go.tempestad-online.com:19000/api/project_badges/measure?project=oreport-parent&metric=sqale_rating)](http://go.tempestad-online.com:19000/dashboard?id=oreport-parent) [![Quality Gate Status](http://go.tempestad-online.com:19000/api/project_badges/measure?project=oreport-parent&metric=alert_status)](http://go.tempestad-online.com:19000/dashboard?id=oreport-parent) [![Reliability Rating](http://go.tempestad-online.com:19000/api/project_badges/measure?project=oreport-parent&metric=reliability_rating)](http://go.tempestad-online.com:19000/dashboard?id=oreport-parent) [![Security Rating](http://go.tempestad-online.com:19000/api/project_badges/measure?project=oreport-parent&metric=security_rating)](http://go.tempestad-online.com:19000/dashboard?id=oreport-parent) [![Technical Debt](http://go.tempestad-online.com:19000/api/project_badges/measure?project=oreport-parent&metric=sqale_index)](http://go.tempestad-online.com:19000/dashboard?id=oreport-parent) [![Vulnerabilities](http://go.tempestad-online.com:19000/api/project_badges/measure?project=oreport-parent&metric=vulnerabilities)](http://go.tempestad-online.com:19000/dashboard?id=oreport-parent)
 
 ---
 
@@ -28,7 +28,7 @@ Proyecto pom padre que provee administracion de dependencias y plugins para proy
 
 ## Variables de entorno opcionales
 
-Valores por defecto (y ejemplos) en [core.properties](oreport-core/src/main/resources/application.properties).
+Valores por defecto (y ejemplos) en [core.properties](oreport-core/src/main/resources/core.properties).
 
 En `env.prop.file` se puede asignar una ruta absoluta a un archivo *.properties* del que se se pueden asignar / reemplazar todas las variables de entorno.
 
