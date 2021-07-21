@@ -14,6 +14,7 @@
 
 | Nombre | Reporte Sonarqube (más info en cada app) |
 | - | - |
+| [oreport-parent](app/oreport-parent) | (pendiente) |
 | [udemy-connector](app/udemy-connector) | [![Quality Gate Status](http://go.tempestad-online.com:19000/api/project_badges/measure?project=udemy-connector&metric=alert_status)](http://go.tempestad-online.com:19000/dashboard?id=udemy-connector) [![Maintainability Rating](http://go.tempestad-online.com:19000/api/project_badges/measure?project=udemy-connector&metric=sqale_rating)](http://go.tempestad-online.com:19000/dashboard?id=udemy-connector) [![Reliability Rating](http://go.tempestad-online.com:19000/api/project_badges/measure?project=udemy-connector&metric=reliability_rating)](http://go.tempestad-online.com:19000/dashboard?id=udemy-connector) [![Security Rating](http://go.tempestad-online.com:19000/api/project_badges/measure?project=udemy-connector&metric=security_rating)](http://go.tempestad-online.com:19000/dashboard?id=udemy-connector) |
 
 ## Aspectos técnicos

@@ -1,4 +1,4 @@
-package com.frager.oreport.udemyconnector.config;
+package com.frager.oreport.core.config;
 
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Configuration;

@@ -8,19 +8,10 @@
 		<artifactId>oreport-parent</artifactId>
 		<version>0.0.1-SNAPSHOT</version>
 	</parent>
-	<artifactId>udemy-connector</artifactId>
-	<name>udemy-connector</name>
-	<description>Udemy connector service.</description>
+	<artifactId>oreport-core</artifactId>
+	<name>oreport-core</name>
+	<description>Nucleo de la logica de administracion compartida de las aplicaciones de oreport.</description>
 	<dependencies>
-		<dependency>
-			<groupId>com.frager.oreport</groupId>
-			<artifactId>oreport-core</artifactId>
-			<version>${project.parent.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-webflux</artifactId>
-		</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-devtools</artifactId>
@@ -33,17 +24,9 @@
 			<scope>test</scope>
 		</dependency>
 		<dependency>
-			<groupId>io.projectreactor</groupId>
-			<artifactId>reactor-test</artifactId>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
 			<groupId>org.springdoc</groupId>
-			<artifactId>springdoc-openapi-webflux-ui</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-actuator</artifactId>
+			<artifactId>springdoc-openapi-common</artifactId>
+			<version>${springdoc-openapi.version}</version>
 		</dependency>
 	</dependencies>
 
