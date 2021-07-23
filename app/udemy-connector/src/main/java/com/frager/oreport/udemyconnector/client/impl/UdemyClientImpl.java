@@ -64,8 +64,11 @@ public class UdemyClientImpl implements UdemyClient {
 	@Value("#{${udemy.user-progress.url.query-params}}")
 	private MultiValueMap<String, String> userProgressUrlQueryParams;
 
-	public UdemyClientImpl() {
+	private WebClient udemyWebClient;
+
+	public UdemyClientImpl(@Autowired @Qualifier("udemy-webclient") WebClient udemyWebClient) {
 		super();
+		this.udemyWebClient = udemyWebClient;
 	}
 
 	/**
@@ -76,7 +79,7 @@ public class UdemyClientImpl implements UdemyClient {
 	private <S, T> MultiValueMap<S, T> mixMaps(@Nullable MultiValueMap<S, T> specificValues,
 			@NonNull MultiValueMap<S, T> defaultValues) {
 		if (specificValues == null || specificValues.isEmpty()) {
-			logger.debug("No se indicaron headers especificos, se retornan los default: {}", defaultValues);
+			logger.debug("No se indicaron parametros especificos, se retornan los default: {}", defaultValues);
 			return defaultValues;
 		}
 
@@ -85,18 +88,14 @@ public class UdemyClientImpl implements UdemyClient {
 			finalValues.addIfAbsent(entry.getKey(), (T) entry.getValue());
 		}
 
-		logger.debug("Se indicaron headers especificos, se retornan los mezclados: {}", finalValues);
+		logger.debug("Se indicaron parametros especificos, se retornan los mezclados: {}", finalValues);
 		return finalValues;
 	}
-
-	@Autowired
-	@Qualifier("udemy-webclient")
-	private WebClient webClient;
 
 	@Override
 	public Mono<SingleCourse> getCourseById(Integer id, MultiValueMap<String, String> queryParams) {
 		MultiValueMap<String, String> finalQueryParams = mixMaps(queryParams, courseUrlQueryParams);
-		return webClient.get()
+		return udemyWebClient.get()
 				.uri(courseUrl, uriF -> uriF.queryParams(finalQueryParams).path(String.valueOf(id)).build()).retrieve()
 				.bodyToMono(SingleCourse.class);
 	}
@@ -104,7 +103,7 @@ public class UdemyClientImpl implements UdemyClient {
 	@Override
 	public Mono<PageResponse<ListedCourse>> getCourses(MultiValueMap<String, String> queryParams) {
 		MultiValueMap<String, String> finalQueryParams = mixMaps(queryParams, coursesUrlQueryParams);
-		return webClient.get().uri(coursesUrl, uriF -> uriF.queryParams(finalQueryParams).build()).retrieve()
+		return udemyWebClient.get().uri(coursesUrl, uriF -> uriF.queryParams(finalQueryParams).build()).retrieve()
 				.bodyToMono(PAGE_OF_COURSE_TYPE_REF);
 	}
 
