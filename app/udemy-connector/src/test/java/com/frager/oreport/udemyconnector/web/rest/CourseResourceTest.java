@@ -96,7 +96,7 @@ class CourseResourceTest {
 	private MultiValueMap<String, String> coursesUrlQueryParams;
 
 	@Test
-	public void getCourseByIdWithNoExtraParamsTest() {
+	void getCourseByIdWithNoExtraParamsTest() {
 		Mono<Course> courseMono = WebClient.create().get()
 				.uri("http://localhost:" + port + "/courses/", uriF -> uriF.path(String.valueOf(177013)).build())
 				.retrieve().bodyToMono(Course.class);
@@ -107,7 +107,7 @@ class CourseResourceTest {
 	}
 
 	@Test
-	public void getCourseByIdWithExtraParamsTest() {
+	void getCourseByIdWithExtraParamsTest() {
 		Mono<Course> courseMono = WebClient.create().get()
 				.uri("http://localhost:" + port + "/courses/",
 						uriF -> uriF.queryParams(coursesUrlQueryParams).path(String.valueOf(177013)).build())
@@ -119,7 +119,7 @@ class CourseResourceTest {
 	}
 
 	@Test
-	public void getCoursesWithNoExtraParamsTest() {
+	void getCoursesWithNoExtraParamsTest() {
 		Flux<Course> courseFlux = WebClient.create().get().uri("http://localhost:" + port + "/courses/").retrieve()
 				.bodyToFlux(Course.class);
 
@@ -129,7 +129,7 @@ class CourseResourceTest {
 	}
 
 	@Test
-	public void getCoursesWithExtraParamsTest() {
+	void getCoursesWithExtraParamsTest() {
 		Flux<Course> courseFlux = WebClient.create().get()
 				.uri("http://localhost:" + port + "/courses/", uriF -> uriF.queryParams(coursesUrlQueryParams).build())
 				.retrieve().bodyToFlux(Course.class);
