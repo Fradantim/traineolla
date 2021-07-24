@@ -10,7 +10,7 @@
 	</parent>
 	<artifactId>udemy-connector</artifactId>
 	<name>udemy-connector</name>
-	<description>Udemy connector service.</description>
+	<description>Servicio de conexion a Udemy.</description>
 	<dependencies>
 		<dependency>
 			<groupId>com.frager.oreport</groupId>
