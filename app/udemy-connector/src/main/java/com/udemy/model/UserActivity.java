@@ -42,6 +42,7 @@ public class UserActivity extends UserAnalytic {
 	private Double numberOfVideoConsumedMinutes;
 
 	public UserActivity() {
+		super();
 	}
 
 	public OffsetDateTime getReportDate() {
