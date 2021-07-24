@@ -23,8 +23,11 @@ public class CourseServiceImpl implements CourseService {
 
 	private static final Logger logger = LoggerFactory.getLogger(CourseServiceImpl.class);
 
-	@Autowired
 	private UdemyClient udemyClient;
+
+	public CourseServiceImpl(@Autowired UdemyClient udemyClient) {
+		this.udemyClient = udemyClient;
+	}
 
 	@Override
 	public Mono<Course> getCourseById(Integer id) {
