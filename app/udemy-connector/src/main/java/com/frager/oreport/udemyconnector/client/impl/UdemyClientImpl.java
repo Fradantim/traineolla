@@ -109,25 +109,19 @@ public class UdemyClientImpl implements UdemyClient {
 
 	@Override
 	public PageResponse<UserActivity> getUserActivity(MultiValueMap<String, String> queryParams) {
-		// MultiValueMap<String, String> finalQueryParams = mixMaps(queryParams,
-		// userActivityUrlQueryParams);
-		// TODO Auto-generated method stub
-		return null;
+		// use userActivityUrlQueryParams
+		throw new UnsupportedOperationException("Implementable plz n°1");
 	}
 
 	@Override
 	public PageResponse<UserCourseActivity> getUserCourseActivity(MultiValueMap<String, String> queryParams) {
-		// MultiValueMap<String, String> finalQueryParams = mixMaps(queryParams,
-		// userCourseActivityUrlQueryParams);
-		// TODO Auto-generated method stub
-		return null;
+		// use userCourseActivityUrlQueryParams
+		throw new UnsupportedOperationException("Implementable plz n°2");
 	}
 
 	@Override
 	public PageResponse<UserProgress> getUserProgress(MultiValueMap<String, String> queryParams) {
-		// MultiValueMap<String, String> finalQueryParams = mixMaps(queryParams,
-		// userProgressUrlQueryParams);
-		// TODO Auto-generated method stub
-		return null;
+		// use userProgressUrlQueryParams
+		throw new UnsupportedOperationException("Implementable plz n°3");
 	}
 }

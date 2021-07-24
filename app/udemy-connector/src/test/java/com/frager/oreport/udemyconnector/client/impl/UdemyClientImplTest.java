@@ -2,6 +2,7 @@ package com.frager.oreport.udemyconnector.client.impl;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import javax.annotation.PostConstruct;
 
@@ -16,6 +17,7 @@ import org.springframework.web.reactive.function.client.ClientResponse;
 import org.springframework.web.reactive.function.client.ExchangeFunction;
 import org.springframework.web.reactive.function.client.WebClient;
 
+import com.frager.oreport.udemyconnector.client.UdemyClient;
 import com.udemy.model.ListedCourse;
 import com.udemy.model.PageResponse;
 import com.udemy.model.SingleCourse;
@@ -63,7 +65,8 @@ class UdemyClientImplTest {
 
 	@Test
 	void getCoursesTest() {
-		new UdemyClientImpl(coursePagesWebClient).getCourses(testCoursesUrlQueryParams).subscribe(this::assertPagedCourse);
+		new UdemyClientImpl(coursePagesWebClient).getCourses(testCoursesUrlQueryParams)
+				.subscribe(this::assertPagedCourse);
 	}
 
 	void assertPagedCourse(PageResponse<ListedCourse> page) {
@@ -75,5 +78,23 @@ class UdemyClientImplTest {
 		assertNotNull(page.getResults().get(0));
 		assertNotNull(page.getResults().get(0).getId());
 		assertNotNull(page.getResults().get(0).getClazz());
+	}
+
+	@Test
+	void getUserActivityTest() {
+		UdemyClient uc = new UdemyClientImpl(null);
+		assertThrows(UnsupportedOperationException.class, () -> uc.getUserActivity(null));
+	}
+
+	@Test
+	void getUserCourseActivityTest() {
+		UdemyClient uc = new UdemyClientImpl(null);
+		assertThrows(UnsupportedOperationException.class, () -> uc.getUserCourseActivity(null));
+	}
+
+	@Test
+	void getUserProgressTest() {
+		UdemyClient uc = new UdemyClientImpl(null);
+		assertThrows(UnsupportedOperationException.class, () -> uc.getUserProgress(null));
 	}
 }
