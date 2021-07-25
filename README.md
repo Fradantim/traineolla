@@ -14,6 +14,7 @@
 
 | Nombre | Reporte Sonarqube (más info en cada app) |
 | - | - |
+| [mail-server](app/mail-server) | [![Maintainability Rating](http://go.tempestad-online.com:19000/api/project_badges/measure?project=mail-server&metric=sqale_rating)](http://go.tempestad-online.com:19000/dashboard?id=mail-server) [![Reliability Rating](http://go.tempestad-online.com:19000/api/project_badges/measure?project=mail-server&metric=reliability_rating)](http://go.tempestad-online.com:19000/dashboard?id=mail-server) [![Security Rating](http://go.tempestad-online.com:19000/api/project_badges/measure?project=mail-server&metric=security_rating)](http://go.tempestad-online.com:19000/dashboard?id=mail-server) [![Quality Gate Status](http://go.tempestad-online.com:19000/api/project_badges/measure?project=mail-server&metric=alert_status)](http://go.tempestad-online.com:19000/dashboard?id=mail-server) |
 | [oreport-parent](app/oreport-parent) | [![Maintainability Rating](http://go.tempestad-online.com:19000/api/project_badges/measure?project=oreport-parent&metric=sqale_rating)](http://go.tempestad-online.com:19000/dashboard?id=oreport-parent) [![Reliability Rating](http://go.tempestad-online.com:19000/api/project_badges/measure?project=oreport-parent&metric=reliability_rating)](http://go.tempestad-online.com:19000/dashboard?id=oreport-parent) [![Security Rating](http://go.tempestad-online.com:19000/api/project_badges/measure?project=oreport-parent&metric=security_rating)](http://go.tempestad-online.com:19000/dashboard?id=oreport-parent) [![Quality Gate Status](http://go.tempestad-online.com:19000/api/project_badges/measure?project=oreport-parent&metric=alert_status)](http://go.tempestad-online.com:19000/dashboard?id=oreport-parent)|
 | [udemy-connector](app/udemy-connector) | [![Maintainability Rating](http://go.tempestad-online.com:19000/api/project_badges/measure?project=udemy-connector&metric=sqale_rating)](http://go.tempestad-online.com:19000/dashboard?id=udemy-connector) [![Reliability Rating](http://go.tempestad-online.com:19000/api/project_badges/measure?project=udemy-connector&metric=reliability_rating)](http://go.tempestad-online.com:19000/dashboard?id=udemy-connector) [![Security Rating](http://go.tempestad-online.com:19000/api/project_badges/measure?project=udemy-connector&metric=security_rating)](http://go.tempestad-online.com:19000/dashboard?id=udemy-connector) [![Quality Gate Status](http://go.tempestad-online.com:19000/api/project_badges/measure?project=udemy-connector&metric=alert_status)](http://go.tempestad-online.com:19000/dashboard?id=udemy-connector) |
 
@@ -27,7 +28,7 @@
     - 🤔 Kafka?
 - Framework de Backend: 
   - ✔️ Springboot 
-  - 🤔 Spring Webflux
+  - ✔️ Spring Webflux
   - ✔️ Spring Rest
   - ✔️ Spring Data
 - ✔️ Aplicacion autoejecutable.
