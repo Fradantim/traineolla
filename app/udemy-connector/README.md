@@ -22,7 +22,7 @@ Servicio para comunicarse con Udemy.
 
 # Variables de entorno
 
-Este proyecto hereda todas las configuraciones de variables de entorno de su padre oreport-parent [oreport-parent](../oreport-parent).
+Este proyecto hereda todas las configuraciones de variables de entorno de su padre [oreport-parent](../oreport-parent).
 
 ## Variables de entorno obligatorias
 
