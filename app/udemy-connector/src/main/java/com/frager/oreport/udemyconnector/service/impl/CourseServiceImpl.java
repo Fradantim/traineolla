@@ -47,15 +47,9 @@ public class CourseServiceImpl implements CourseService {
 	public Flux<Course> getCourses(MultiValueMap<String, String> queryParams) {
 		Mono<PageResponse<ListedCourse>> listedCoursePageMono = udemyClient.getCourses(queryParams);
 		Flux<Course> currentFlux = listedCoursePageMono.flatMapMany(page -> {
-			MultiValueMap<String, String> nextPageInfo = URLUtils.getQueryParamsFromURL(page.getNext());
-			if (nextPageInfo == null || nextPageInfo.isEmpty()) {
-				return Flux.fromIterable(page.getResults()).map(CourseMapper::fromListedCourse);
-			} else {
-				logger.debug("La consulta previa informa de una siguiente pagina. count:{}, query-params:{}",
-						page.getCount(), nextPageInfo);
-				return Flux.fromIterable(page.getResults()).map(CourseMapper::fromListedCourse)
-						.concatWith(getCourses(nextPageInfo));
-			}
+			logger.debug("Transformando pagina de {} elementos", page.getCount());
+			return Flux.fromIterable(page.getResults()).map(CourseMapper::fromListedCourse)
+					.concatWith(getNextPageCourses(page.getNext()));
 		});
 
 		if (logger.isDebugEnabled()) {
@@ -63,5 +57,16 @@ public class CourseServiceImpl implements CourseService {
 		}
 
 		return currentFlux;
+	}
+
+	private Flux<Course> getNextPageCourses(String nextPageUrl) {
+		MultiValueMap<String, String> nextPageInfo = URLUtils.getQueryParamsFromURL(nextPageUrl);
+
+		if (nextPageInfo != null && !nextPageInfo.isEmpty()) {
+			logger.debug("La consulta previa informa de una siguiente pagina: query-params:{}", nextPageInfo);
+			return getCourses(nextPageInfo);
+		}
+
+		return Flux.empty();
 	}
 }
