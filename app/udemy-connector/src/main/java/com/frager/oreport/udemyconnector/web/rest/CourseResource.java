@@ -15,6 +15,7 @@ import com.frager.oreport.udemyconnector.model.Course;
 import com.frager.oreport.udemyconnector.service.CourseService;
 
 import io.swagger.v3.oas.annotations.Parameter;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 @RestController
@@ -34,7 +35,7 @@ public class CourseResource extends UdemyResource {
 	}
 
 	@GetMapping(produces = MediaType.APPLICATION_NDJSON_VALUE)
-	public Object getAll(
+	public Flux<Course> getAll(
 			@Parameter(description = "${api-docs.request.udemy.params.description}") @RequestParam(defaultValue = "{}") Map<String, String> requestParams) {
 		return courseService.getCourses(getUdemySpecificRequestParams(requestParams));
 	}
