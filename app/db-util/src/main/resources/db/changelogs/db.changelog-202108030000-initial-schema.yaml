@@ -1,0 +1,255 @@
+databaseChangeLog:
+- changeSet:
+    id: 202108030000-initial-schema-01-create-learning-path
+    author: oreport.db-util
+    changes:
+    - createTable:
+        tableName: LEARNING_PATH
+        columns:
+        - column:
+            autoIncrement: true
+            constraints:
+                primaryKey: true
+                primaryKeyName: LEARNING_PATH_PK
+            name: ID
+            type: BIGINT
+        - column:
+            constraints:
+                unique: true
+                nullable: false
+            name: NAME
+            type: VARCHAR(255)
+        - column:
+            name: DESCRIPTION
+            type: CLOB
+        - column:
+            name: ENABLED
+            type: BOOLEAN
+        - column:
+            name: LEVEL
+            type: INT
+- changeSet:
+    id: 202108030000-initial-schema-02-create-learning-path-idx
+    author: oreport.db-util
+    changes:
+    - createIndex:
+        tableName: LEARNING_PATH
+        columns:
+        - column:
+            name: NAME
+        unique:  true
+        indexName: LEARNING_PATH_IDX_NAME
+    - createIndex:
+        tableName: LEARNING_PATH
+        columns:
+        - column:
+            name: LEVEL
+        unique:  false
+        indexName: LEARNING_PATH_IDX_LEVEL
+- changeSet:
+    id: 202108030000-initial-schema-03-create-course
+    author: oreport.db-util
+    changes:
+    - createTable:
+        tableName: COURSE
+        columns:
+        - column:
+            constraints:
+                primaryKey: true
+                primaryKeyName: COURSE_PK
+            name: ID
+            type: BIGINT
+        - column:
+            name: TITLE
+            type: VARCHAR(255)
+        - column:
+            name: DESCRIPTION
+            type: CLOB
+        - column:
+            name: ESTIMATED_CONTENT_LENGTH
+            type: INT
+        - column:
+            name: NUM_LECTURES
+            type: INT
+        - column:
+            name: NUM_QUIZZES
+            type: INT
+        - column:
+            name: NUM_PRACTICE_TESTS
+            type: INT
+        - column:
+            name: EXPECTED_SCORE
+            type: INT
+- changeSet:
+    id: 202108030000-initial-schema-04-create-course-idx
+    author: oreport.db-util
+    changes:
+    - createIndex:
+        tableName: COURSE
+        columns:
+        - column:
+            name: TITLE
+        indexName: COURSE_IDX_TITLE
+- changeSet:
+    id: 202108030000-initial-schema-05-create-learning-path-course
+    author: oreport.db-util
+    changes:
+    - createTable:
+        tableName: LEARNING_PATH_COURSE
+        columns:
+        - column:
+            constraints:
+                primaryKey: true
+                primaryKeyName: LEARNING_PATH_COURSE_PK
+                foreignKeyName: LEARNING_PATH_COURSE_FK_LEARNING_PATH
+                references: LEARNING_PATH(ID)
+            name: LEARNING_PATH_ID
+            type: BIGINT
+        - column:
+            constraints:
+                primaryKey: true
+                primaryKeyName: LEARNING_PATH_COURSE_PK
+                foreignKeyName: LEARNING_PATH_COURSE_FK_COURSE
+                references: COURSE(ID)
+            name: COURSE_ID
+            type: BIGINT
+- changeSet:
+    id: 202108030000-initial-schema-06-create-role
+    author: oreport.db-util
+    changes:
+    - createTable:
+        tableName: ROLE
+        columns:
+        - column:
+            constraints:
+                primaryKey: true
+                primaryKeyName: ROLE_PK
+            name: NAME
+            type: VARCHAR(255)
+- changeSet:
+    id: 202108030000-initial-schema-07-create-user
+    author: oreport.db-util
+    changes:
+    - createTable:
+        tableName: USER
+        columns:
+        - column:
+            constraints:
+                primaryKey: true
+                primaryKeyName: USER_PK
+            name: LOGIN
+            type: VARCHAR(255)
+        - column:
+            name: PASSWORD
+            type: VARCHAR(255)
+        - column:
+            name: LOGIN_ENABLED
+            type: BOOLEAN
+            defaultValue: false
+        - column:
+            name: LEVEL
+            type: INT
+        - column:
+            name: PEOPLE_LEAD
+            type: VARCHAR(255)
+        - column:
+            name: RESET_PASSWORD
+            type: VARCHAR(255)
+- changeSet:
+    id: 202108030000-initial-schema-08-create-user-role
+    author: oreport.db-util
+    changes:
+    - createTable:
+        tableName: USER_ROLE
+        columns:
+        - column:
+            constraints:
+                primaryKey: true
+                primaryKeyName: USER_ROLE_PK
+                foreignKeyName: USER_ROLE_FK_USER
+                references: USER(LOGIN)
+            name: USER_LOGIN
+            type: VARCHAR(255)
+        - column:
+            constraints:
+                primaryKey: true
+                primaryKeyName: USER_ROLE_PK
+                foreignKeyName: USER_ROLE_FK_ROLE
+                references: ROLE(NAME)
+            name: ROLE_NAME
+            type: VARCHAR(255)
+- changeSet:
+    id: 202108030000-initial-schema-09-add-admin
+    author: oreport.db-util
+    changes:
+    - insert:
+        tableName: ROLE
+        columns:  
+        -  column:  
+            name: NAME  
+            value: admin
+    - insert:
+        tableName: USER
+        columns:  
+        -  column:  
+            name: LOGIN  
+            value: admin
+        -  column:  
+            name: LOGIN_ENABLED  
+            value: true
+    - insert:
+        tableName: USER_ROLE
+        columns:  
+        -  column:  
+            name: USER_LOGIN  
+            value: admin
+        -  column:  
+            name: ROLE_NAME  
+            value: admin
+- changeSet:
+    id: 202108030000-initial-schema-10-create-user-course-snapshot
+    author: oreport.db-util
+    changes:
+    - createTable:
+        tableName: USER_COURSE_SNAPSHOT
+        columns:
+        - column:
+            constraints:
+                primaryKey: true
+                primaryKeyName: USER_COURSE_SNAPSHOT_PK
+                foreignKeyName: USER_COURSE_SNAPSHOT_FK_USER
+                references: USER(LOGIN)
+            name: USER_LOGIN
+            type: VARCHAR(255)
+        - column:
+            constraints:
+                primaryKey: true
+                primaryKeyName: USER_COURSE_SNAPSHOT_PK
+                foreignKeyName: USER_COURSE_SNAPSHOT_FK_COURSE
+                references: COURSE(ID)
+            name: COURSE_ID
+            type: BIGINT
+        - column:
+            constraints:
+                primaryKey: true
+                primaryKeyName: USER_COURSE_SNAPSHOT_PK
+            name: SNAP_DATE
+            type: DATETIME
+        - column:
+            name: COMPLETION_RATIO
+            type: DOUBLE
+        - column:
+            name: NUM_VIDEO_CONSUMED_MINUTES                       
+            type: INT
+        - column:
+            name: COURSE_ENROLL_DATE
+            type: DATETIME
+        - column:
+            name: COURSE_START_DATE
+            type: DATETIME
+        - column:
+            name: COURSE_COMPLETION_DATE
+            type: DATETIME
+        - column:
+            name: COURSE_FIRST_COMPLETION_DATE
+            type: DATETIME
