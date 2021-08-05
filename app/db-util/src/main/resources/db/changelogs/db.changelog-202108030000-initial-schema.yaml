@@ -91,25 +91,25 @@ databaseChangeLog:
             name: TITLE
         indexName: COURSE_IDX_TITLE
 - changeSet:
-    id: 202108030000-initial-schema-05-create-learning-path-course
+    id: 202108030000-initial-schema-05-create-course-learning-path
     author: oreport.db-util
     changes:
     - createTable:
-        tableName: LEARNING_PATH_COURSE
+        tableName: COURSE_LEARNING_PATH
         columns:
         - column:
             constraints:
                 primaryKey: true
-                primaryKeyName: LEARNING_PATH_COURSE_PK
-                foreignKeyName: LEARNING_PATH_COURSE_FK_LEARNING_PATH
+                primaryKeyName: COURSE_LEARNING_PATH_PK
+                foreignKeyName: COURSE_LEARNING_PATH_FK_LEARNING_PATH
                 references: LEARNING_PATH(ID)
             name: LEARNING_PATH_ID
             type: BIGINT
         - column:
             constraints:
                 primaryKey: true
-                primaryKeyName: LEARNING_PATH_COURSE_PK
-                foreignKeyName: LEARNING_PATH_COURSE_FK_COURSE
+                primaryKeyName: COURSE_LEARNING_PATH_PK
+                foreignKeyName: COURSE_LEARNING_PATH_FK_COURSE
                 references: COURSE(ID)
             name: COURSE_ID
             type: BIGINT
@@ -156,25 +156,25 @@ databaseChangeLog:
             name: RESET_PASSWORD
             type: VARCHAR(255)
 - changeSet:
-    id: 202108030000-initial-schema-08-create-user-role
+    id: 202108030000-initial-schema-08-create-role-user
     author: oreport.db-util
     changes:
     - createTable:
-        tableName: USER_ROLE
+        tableName: ROLE_USER
         columns:
         - column:
             constraints:
                 primaryKey: true
-                primaryKeyName: USER_ROLE_PK
-                foreignKeyName: USER_ROLE_FK_USER
+                primaryKeyName: ROLE_USER_PK
+                foreignKeyName: ROLE_USER_FK_USER
                 references: USER(LOGIN)
             name: USER_LOGIN
             type: VARCHAR(255)
         - column:
             constraints:
                 primaryKey: true
-                primaryKeyName: USER_ROLE_PK
-                foreignKeyName: USER_ROLE_FK_ROLE
+                primaryKeyName: ROLE_USER_PK
+                foreignKeyName: ROLE_USER_FK_ROLE
                 references: ROLE(NAME)
             name: ROLE_NAME
             type: VARCHAR(255)
@@ -198,7 +198,7 @@ databaseChangeLog:
             name: LOGIN_ENABLED  
             value: true
     - insert:
-        tableName: USER_ROLE
+        tableName: ROLE_USER
         columns:  
         -  column:  
             name: USER_LOGIN  
@@ -207,32 +207,32 @@ databaseChangeLog:
             name: ROLE_NAME  
             value: admin
 - changeSet:
-    id: 202108030000-initial-schema-10-create-user-course-snapshot
+    id: 202108030000-initial-schema-10-create-course-user-snapshot
     author: oreport.db-util
     changes:
     - createTable:
-        tableName: USER_COURSE_SNAPSHOT
+        tableName: COURSE_USER_SNAPSHOT
         columns:
         - column:
             constraints:
                 primaryKey: true
-                primaryKeyName: USER_COURSE_SNAPSHOT_PK
-                foreignKeyName: USER_COURSE_SNAPSHOT_FK_USER
+                primaryKeyName: COURSE_USER_SNAPSHOT_PK
+                foreignKeyName: COURSE_USER_SNAPSHOT_FK_USER
                 references: USER(LOGIN)
             name: USER_LOGIN
             type: VARCHAR(255)
         - column:
             constraints:
                 primaryKey: true
-                primaryKeyName: USER_COURSE_SNAPSHOT_PK
-                foreignKeyName: USER_COURSE_SNAPSHOT_FK_COURSE
+                primaryKeyName: COURSE_USER_SNAPSHOT_PK
+                foreignKeyName: COURSE_USER_SNAPSHOT_FK_COURSE
                 references: COURSE(ID)
             name: COURSE_ID
             type: BIGINT
         - column:
             constraints:
                 primaryKey: true
-                primaryKeyName: USER_COURSE_SNAPSHOT_PK
+                primaryKeyName: COURSE_USER_SNAPSHOT_PK
             name: SNAP_DATE
             type: DATETIME
         - column:
@@ -253,3 +253,26 @@ databaseChangeLog:
         - column:
             name: COURSE_FIRST_COMPLETION_DATE
             type: DATETIME
+- changeSet:
+    id: 202108030000-initial-schema-11-create-learning-path-user
+    author: oreport.db-util
+    changes:
+    - createTable:
+        tableName: LEARNING_PATH_USER
+        columns:
+        - column:
+            constraints:
+                primaryKey: true
+                primaryKeyName: LEARNING_PATH_USER_PK
+                foreignKeyName: LEARNING_PATH_USER_FK_USER
+                references: USER(LOGIN)
+            name: USER_LOGIN
+            type: VARCHAR(255)
+        - column:
+            constraints:
+                primaryKey: true
+                primaryKeyName: LEARNING_PATH_USER_PK
+                foreignKeyName: LEARNING_PATH_USER_FK_LEARNING_PATH
+                references: LEARNING_PATH(ID)
+            name: LEARNING_PATH_ID
+            type: BIGINT
