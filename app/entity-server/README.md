@@ -37,4 +37,4 @@ Valores por defecto (y ejemplos) en [application.properties](src/main/resources/
 
 | Nombre | Detalle |
 | - | - |
-| N/A | N/A |
+| `api-docs.request.mail.description` | Documentacion de OpenApi. |
