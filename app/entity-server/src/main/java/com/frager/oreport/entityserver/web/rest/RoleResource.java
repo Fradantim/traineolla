@@ -1,7 +1,5 @@
 package com.frager.oreport.entityserver.web.rest;
 
-import java.net.URI;
-import java.net.URISyntaxException;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -45,11 +43,11 @@ public class RoleResource {
 	@PostMapping()
 	public Mono<ResponseEntity<Role>> createRole(@RequestBody Role role) {
 		logger.debug("REST request para crear Role : {}", role);
-		return roleService.save(role).map(result -> {
-			return ResponseEntity.created(UriComponentsBuilder.fromUriString(PATH).path(role.getName()).build().toUri())
+		return roleService.save(role).map(result -> 
+			ResponseEntity.created(UriComponentsBuilder.fromUriString(PATH).path(role.getName()).build().toUri())
 					.headers(headerService.createEntityCreationAlert(Role.class, result.getId()))
-					.body(result);
-		});
+					.body(result)
+		);
 	}
 
 	@GetMapping(produces = MediaType.APPLICATION_NDJSON_VALUE)
