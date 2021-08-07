@@ -145,7 +145,6 @@ class RoleResourceTest {
 
 		Long databaseSizeBeforeDelete = roleRepository.count().block();
 
-        // Delete the region
         webTestClient
             .delete()
             .uri(RoleResource.PATH + "/{id}", newRole.getName())
@@ -154,7 +153,7 @@ class RoleResourceTest {
             .expectStatus()
             .isNoContent();
 
-        // Validate the database contains one less item
+        // Validar que los numeros cierren
         StepVerifier.create(roleRepository.findById(newRole.getName())).expectComplete();
         assertThat(roleRepository.count().block()).isEqualTo(databaseSizeBeforeDelete - 1);
     }
