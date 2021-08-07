@@ -1,16 +1,18 @@
 package com.frager.oreport.entityserver.config;
 
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.AutoConfigureAfter;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import com.frager.oreport.core.config.PropertiesConfig;
+
 import io.r2dbc.h2.H2ConnectionConfiguration;
 import io.r2dbc.h2.H2ConnectionFactory;
 
-@ConditionalOnProperty("spring.r2dbc.url")
-@ConditionalOnExpression("#{'${spring.r2dbc.url}'.substring(0,12) matches 'r2dbc:h2:tcp'}")
+@AutoConfigureAfter(PropertiesConfig.class)
 @Configuration
 public class H2Config {
 
@@ -22,6 +24,8 @@ public class H2Config {
 	 * @see <a href="https://github.com/r2dbc/r2dbc-h2/issues/86">r2dbc-h2
 	 *      Issue#86</a>
 	 */
+	@ConditionalOnProperty("spring.r2dbc.url")
+	@ConditionalOnExpression("#{'${spring.r2dbc.url}'.substring(0,12) matches 'r2dbc:h2:tcp'}")
 	@Bean
 	public H2ConnectionFactory h2ConnectionFactory(@Value("${spring.r2dbc.url}") String url,
 			@Value("${spring.r2dbc.username}") String username, @Value("${spring.r2dbc.password}") String password) {
