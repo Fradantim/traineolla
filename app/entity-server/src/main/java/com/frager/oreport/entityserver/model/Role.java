@@ -44,14 +44,13 @@ public class Role implements Persistable<String> {
 	}
 
 	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		Role other = (Role) obj;
-		return this.name.equals(other.name);
+	public boolean equals(Object o) {
+	    if (this == o) {
+            return true;
+        }
+        if (!(o instanceof Role)) {
+            return false;
+        }
+        return name != null && name.equals(((Role) o).name);
 	}
 }
