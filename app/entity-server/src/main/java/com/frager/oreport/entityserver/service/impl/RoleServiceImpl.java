@@ -33,4 +33,9 @@ public class RoleServiceImpl implements RoleService {
 	public Flux<Role> findAll() {
 		return roleRepository.findAll();
 	}
+	
+	@Override
+	public Mono<Void> delete(String id) {
+		return roleRepository.deleteById(id);
+	}
 }

@@ -1,4 +1,4 @@
-package com.frager.oreport.entityserver.web.util;
+package tech.jhipster.web.util.reactive;
 
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;

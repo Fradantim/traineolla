@@ -12,4 +12,6 @@ public interface RoleService {
 	public Mono<Role> findById(String id);
 
 	public Flux<Role> findAll();
+	
+	public Mono<Void> delete(String id);
 }

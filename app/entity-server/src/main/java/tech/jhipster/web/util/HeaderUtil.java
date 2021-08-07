@@ -1,4 +1,4 @@
-package com.frager.oreport.entityserver.web.util;
+package tech.jhipster.web.util;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -11,7 +11,7 @@ import java.nio.charset.StandardCharsets;
 /**
  * Utility class for HTTP headers creation.
  */
-public class HeaderUtil {
+public final class HeaderUtil {
 
     private static final Logger log = LoggerFactory.getLogger(HeaderUtil.class);
 
