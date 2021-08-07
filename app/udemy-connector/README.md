@@ -42,7 +42,7 @@ Valores por defecto (y ejemplos) en [application.properties](src/main/resources/
 | - | - |
 | `api-docs.request.udemy.params.description` | Documentacion de OpenApi. |
 | `request.udemy.params.identifier` | Los request-param que empiecen con este valor serán incluidos directamente en la consulta a Udemy. |
-| `udemy.default-page-size` | Cantidad elementos por página retornados por cada consulta a Udemy. Udemy indica no superar 100. <br /> **IMPORTANTE**: Ver [Cuestiones de recursos](#cuestiones-de-recursos) |
+| `udemy.default-page-size` | Cantidad elementos por página retornados por cada consulta a Udemy. Udemy indica no superar 100 y recomienda utilizar 20. <br /> **IMPORTANTE**: Ver [Cuestiones de recursos](#cuestiones-de-recursos) |
 | `udemy.course.url` | Url de la lista de catalogo del portal de aprendizaje de Udemy, ingresando por id de curso. |
 | `udemy.course.url.query-params` | Argumentos de busqueda para acotar resultados o especificar atributos a recuperar al consultar contra `udemy.course.url`. |
 | `udemy.courses.url` | Url de la lista de catalogo del portal de aprendizaje de Udemy. |
