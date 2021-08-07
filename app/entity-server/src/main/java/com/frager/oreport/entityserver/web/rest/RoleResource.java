@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.util.UriComponentsBuilder;
 
 import com.frager.oreport.entityserver.model.Role;
 import com.frager.oreport.entityserver.service.HeaderService;
@@ -42,16 +43,12 @@ public class RoleResource {
 	private HeaderService headerService;
 
 	@PostMapping()
-	public Mono<ResponseEntity<Role>> createRole(@RequestBody Role role) throws URISyntaxException {
+	public Mono<ResponseEntity<Role>> createRole(@RequestBody Role role) {
 		logger.debug("REST request para crear Role : {}", role);
 		return roleService.save(role).map(result -> {
-			try {
-				return ResponseEntity.created(new URI(PATH + "/" + role.getName()))
-						.headers(headerService.createEntityCreationAlert(Role.class, result.getId().toString()))
-						.body(result);
-			} catch (URISyntaxException e) {
-				throw new RuntimeException(e);
-			}
+			return ResponseEntity.created(UriComponentsBuilder.fromUriString(PATH).path(role.getName()).build().toUri())
+					.headers(headerService.createEntityCreationAlert(Role.class, result.getId()))
+					.body(result);
 		});
 	}
 
@@ -78,6 +75,6 @@ public class RoleResource {
 	public Mono<ResponseEntity<Void>> deleteCountry(@PathVariable String id) {
 		logger.debug("REST request borrar rol : {}", id);
 		return roleService.delete(id).map(result -> ResponseEntity.noContent()
-				.headers(headerService.createEntityDeletionAlert(Role.class, id.toString())).build());
+				.headers(headerService.createEntityDeletionAlert(Role.class, id)).build());
 	}
 }
