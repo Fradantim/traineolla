@@ -1,5 +1,7 @@
 package com.frager.oreport.entityserver.model;
 
+import javax.validation.constraints.NotNull;
+
 import org.springframework.data.annotation.Id;
 import org.springframework.data.domain.Persistable;
 import org.springframework.data.relational.core.mapping.Column;
@@ -10,6 +12,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 @Table("ROLE")
 public class Role implements Persistable<String> {
 
+	@NotNull
 	@Id
 	@Column("NAME")
 	private String name;
@@ -39,14 +42,6 @@ public class Role implements Persistable<String> {
 	}
 
 	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + ((name == null) ? 0 : name.hashCode());
-		return result;
-	}
-
-	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)
 			return true;
@@ -55,11 +50,6 @@ public class Role implements Persistable<String> {
 		if (getClass() != obj.getClass())
 			return false;
 		Role other = (Role) obj;
-		if (name == null) {
-			if (other.name != null)
-				return false;
-		} else if (!name.equals(other.name))
-			return false;
-		return true;
+		return this.name.equals(other.name);
 	}
 }
