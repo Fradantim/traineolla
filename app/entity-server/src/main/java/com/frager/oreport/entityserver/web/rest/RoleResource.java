@@ -69,10 +69,10 @@ public class RoleResource {
 	}
 
 	@DeleteMapping("/{id}")
-	// @ResponseStatus(code = HttpStatus.NO_CONTENT)
+	@ResponseStatus(code = HttpStatus.NO_CONTENT)
 	public Mono<ResponseEntity<Void>> deleteRole(@PathVariable String id) {
 		logger.debug("REST request borrar rol : {}", id);
-		return roleService.delete(id).map(result -> ResponseEntity.noContent()
+		return roleService.delete(id).then(Mono.just(0)).map(result -> ResponseEntity.noContent()
 				.headers(headerService.createEntityDeletionAlert(Role.class, id)).build());
 	}
 }

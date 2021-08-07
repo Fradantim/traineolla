@@ -1,7 +1,5 @@
 package com.frager.oreport.entityserver.model;
 
-import javax.validation.constraints.NotNull;
-
 import org.springframework.data.annotation.Id;
 import org.springframework.data.domain.Persistable;
 import org.springframework.data.relational.core.mapping.Column;
@@ -12,7 +10,6 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 @Table("ROLE")
 public class Role implements Persistable<String> {
 
-	@NotNull
 	@Id
 	@Column("NAME")
 	private String name;
@@ -39,6 +36,11 @@ public class Role implements Persistable<String> {
 	@Override
 	public boolean isNew() {
 		return true;
+	}
+
+	@Override
+	public int hashCode() {
+		return 31 + ((name == null) ? 0 : name.hashCode());
 	}
 
 	@Override

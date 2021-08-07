@@ -42,8 +42,8 @@ class RoleResourceTest {
 		newRole.setName("new-role-" + LocalDateTime.now());
 		Long databaseSizeBeforeCreate = roleRepository.count().block();
 		// Crear nuevo rol
-		webTestClient.post().uri(RoleResource.PATH).contentType(MediaType.APPLICATION_JSON)
-				.bodyValue(newRole).exchange().expectStatus().isCreated();
+		webTestClient.post().uri(RoleResource.PATH).contentType(MediaType.APPLICATION_JSON).bodyValue(newRole)
+				.exchange().expectStatus().isCreated();
 
 		// Validar que el nuevo rol existe en la BBDD
 		roleRepository.findById(newRole.getName()).switchIfEmpty(Mono.just(new Role())).subscribe(c -> {
@@ -54,107 +54,67 @@ class RoleResourceTest {
 		// Validar que los numeros cierren
 		assertThat(roleRepository.count().block()).isEqualTo(databaseSizeBeforeCreate + 1);
 	}
-	
-	@Test
-    void getAllRolesAsStream() {
-        // Inicializo
-		Role newRole = new Role();
-		newRole.setName("new-role-" + LocalDateTime.now());
-		roleRepository.save(newRole).block();
 
-        List<Role> roleList = webTestClient
-            .get()
-            .uri(RoleResource.PATH)
-            .accept(MediaType.APPLICATION_NDJSON)
-            .exchange()
-            .expectStatus()
-            .isOk()
-            .expectHeader()
-            .contentTypeCompatibleWith(MediaType.APPLICATION_NDJSON)
-            .returnResult(Role.class)
-            .getResponseBody()
-            .filter(newRole::equals)
-            .collectList()
-            .block();
-
-        assertThat(roleList).isNotNull();
-        assertThat(roleList).hasSize(1);
-        assertThat(roleList.get(0)).isEqualTo(newRole);
-    }
-	
 	@Test
-    void getAllRoles() {
+	void getAllRolesAsStream() {
 		// Inicializo
 		Role newRole = new Role();
 		newRole.setName("new-role-" + LocalDateTime.now());
 		roleRepository.save(newRole).block();
 
-        // get all
-        webTestClient
-            .get()
-            .uri(RoleResource.PATH)
-            .accept(MediaType.APPLICATION_JSON)
-            .exchange()
-            .expectStatus()
-            .isOk()
-            .expectHeader()
-            .contentType(MediaType.APPLICATION_JSON)
-            .expectBody()
-            .jsonPath("$.[*].name")
-            .value(hasItem(newRole.getName()));
-    }
-	
+		List<Role> roleList = webTestClient.get().uri(RoleResource.PATH).accept(MediaType.APPLICATION_NDJSON).exchange()
+				.expectStatus().isOk().expectHeader().contentTypeCompatibleWith(MediaType.APPLICATION_NDJSON)
+				.returnResult(Role.class).getResponseBody().filter(newRole::equals).collectList().block();
+
+		assertThat(roleList).isNotNull().hasSize(1);
+		assertThat(roleList.get(0)).isEqualTo(newRole);
+	}
+
 	@Test
-    void getRole() {
+	void getAllRoles() {
 		// Inicializo
 		Role newRole = new Role();
 		newRole.setName("new-role-" + LocalDateTime.now());
 		roleRepository.save(newRole).block();
 
-        webTestClient
-            .get()
-            .uri(RoleResource.PATH + "/{id}", newRole.getName())
-            .accept(MediaType.APPLICATION_JSON)
-            .exchange()
-            .expectStatus()
-            .isOk()
-            .expectHeader()
-            .contentType(MediaType.APPLICATION_JSON)
-            .expectBody()
-            .jsonPath("$.name")
-            .value(is(newRole.getName()));
-    }
-	
-    @Test
-    void getNonExistingRole() {
-        webTestClient
-            .get()
-            .uri(RoleResource.PATH + "/{id}", Long.MAX_VALUE)
-            .accept(MediaType.APPLICATION_JSON)
-            .exchange()
-            .expectStatus()
-            .isNotFound();
-    }
-    
-    @Test
-    void deleteRole() {
-    	// Inicializo
+		// get all
+		webTestClient.get().uri(RoleResource.PATH).accept(MediaType.APPLICATION_JSON).exchange().expectStatus().isOk()
+				.expectHeader().contentType(MediaType.APPLICATION_JSON).expectBody().jsonPath("$.[*].name")
+				.value(hasItem(newRole.getName()));
+	}
+
+	@Test
+	void getRole() {
+		// Inicializo
+		Role newRole = new Role();
+		newRole.setName("new-role-" + LocalDateTime.now());
+		roleRepository.save(newRole).block();
+
+		webTestClient.get().uri(RoleResource.PATH + "/{id}", newRole.getName()).accept(MediaType.APPLICATION_JSON)
+				.exchange().expectStatus().isOk().expectHeader().contentType(MediaType.APPLICATION_JSON).expectBody()
+				.jsonPath("$.name").value(is(newRole.getName()));
+	}
+
+	@Test
+	void getNonExistingRole() {
+		webTestClient.get().uri(RoleResource.PATH + "/{id}", Long.MAX_VALUE).accept(MediaType.APPLICATION_JSON)
+				.exchange().expectStatus().isNotFound();
+	}
+
+	@Test
+	void deleteRole() {
+		// Inicializo
 		Role newRole = new Role();
 		newRole.setName("new-role-" + LocalDateTime.now());
 		roleRepository.save(newRole).block();
 
 		Long databaseSizeBeforeDelete = roleRepository.count().block();
 
-        webTestClient
-            .delete()
-            .uri(RoleResource.PATH + "/{id}", newRole.getName())
-            .accept(MediaType.APPLICATION_JSON)
-            .exchange()
-            .expectStatus()
-            .isNoContent();
+		webTestClient.delete().uri(RoleResource.PATH + "/{id}", newRole.getName()).accept(MediaType.APPLICATION_JSON)
+				.exchange().expectStatus().isNoContent();
 
-        // Validar que los numeros cierren
-        StepVerifier.create(roleRepository.findById(newRole.getName())).expectComplete();
-        assertThat(roleRepository.count().block()).isEqualTo(databaseSizeBeforeDelete - 1);
-    }
+		// Validar que los numeros cierren
+		StepVerifier.create(roleRepository.findById(newRole.getName())).expectComplete();
+		assertThat(roleRepository.count().block()).isEqualTo(databaseSizeBeforeDelete - 1);
+	}
 }
