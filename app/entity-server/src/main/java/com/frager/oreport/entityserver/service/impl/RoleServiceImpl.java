@@ -28,6 +28,11 @@ public class RoleServiceImpl implements RoleService {
 	public Mono<Role> findById(Long id) {
 		return roleRepository.findById(id);
 	}
+	
+	@Override
+	public Mono<Role> findOneByName(String name){
+		return roleRepository.findOneByName(name);
+	}
 
 	@Override
 	public Flux<Role> findAll() {

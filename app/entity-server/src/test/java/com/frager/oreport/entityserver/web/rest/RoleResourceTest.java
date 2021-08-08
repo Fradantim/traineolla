@@ -84,6 +84,19 @@ class RoleResourceTest {
 	}
 
 	@Test
+	void getAllRolesByName() {
+		// Inicializo
+		Role newRole = new Role();
+		newRole.setName("new-role-" + LocalDateTime.now());
+		roleRepository.save(newRole).block();
+
+		// get all
+		webTestClient.get().uri(RoleResource.PATH + "?name=" + newRole.getName()).accept(MediaType.APPLICATION_JSON)
+				.exchange().expectStatus().isOk().expectHeader().contentType(MediaType.APPLICATION_JSON).expectBody()
+				.jsonPath("$.[*].name").value(hasItem(newRole.getName()));
+	}
+
+	@Test
 	void getRole() {
 		// Inicializo
 		Role newRole = new Role();

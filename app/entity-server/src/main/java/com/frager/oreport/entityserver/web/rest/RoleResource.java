@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.util.UriComponentsBuilder;
@@ -43,22 +44,25 @@ public class RoleResource {
 	@PostMapping()
 	public Mono<ResponseEntity<Role>> createRole(@RequestBody Role role) {
 		logger.debug("REST request para crear Role : {}", role);
-		return roleService.save(role).map(result -> 
-			ResponseEntity.created(UriComponentsBuilder.fromUriString(PATH).path(role.getName()).build().toUri())
-					.headers(headerService.createEntityCreationAlert(Role.class, result.getId()))
-					.body(result)
-		);
+		return roleService.save(role)
+				.map(result -> ResponseEntity
+						.created(UriComponentsBuilder.fromUriString(PATH).path(role.getName()).build().toUri())
+						.headers(headerService.createEntityCreationAlert(Role.class, result.getId())).body(result));
 	}
 
 	@GetMapping(produces = MediaType.APPLICATION_NDJSON_VALUE)
-	public Flux<Role> getAllRolesAsStream() {
+	public Flux<Role> getAllRolesAsStream(@RequestParam(required = false) String name) {
+		if (name != null) {
+			logger.debug("REST request consultando todos los roles name={}", name);
+			return roleService.findOneByName(name).flux();
+		}
 		logger.debug("REST request consultando todos los roles");
 		return roleService.findAll();
 	}
 
 	@GetMapping()
-	public Mono<List<Role>> getAllRoles() {
-		return getAllRolesAsStream().collectList();
+	public Mono<List<Role>> getAllRoles(@RequestParam(required = false) String name) {
+		return getAllRolesAsStream(name).collectList();
 	}
 
 	@GetMapping("/{id}")

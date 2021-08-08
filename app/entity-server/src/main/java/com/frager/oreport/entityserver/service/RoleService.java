@@ -10,6 +10,8 @@ public interface RoleService {
 	public Mono<Role> save(Role role);
 
 	public Mono<Role> findById(Long id);
+	
+	public Mono<Role> findOneByName(String name);
 
 	public Flux<Role> findAll();
 	
