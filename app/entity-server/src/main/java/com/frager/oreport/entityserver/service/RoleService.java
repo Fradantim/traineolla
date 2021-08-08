@@ -9,9 +9,9 @@ public interface RoleService {
 
 	public Mono<Role> save(Role role);
 
-	public Mono<Role> findById(String id);
+	public Mono<Role> findById(Long id);
 
 	public Flux<Role> findAll();
 	
-	public Mono<Void> delete(String id);
+	public Mono<Void> delete(Long id);
 }

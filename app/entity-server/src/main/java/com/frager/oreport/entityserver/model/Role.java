@@ -1,21 +1,29 @@
 package com.frager.oreport.entityserver.model;
 
 import org.springframework.data.annotation.Id;
-import org.springframework.data.domain.Persistable;
 import org.springframework.data.relational.core.mapping.Column;
 import org.springframework.data.relational.core.mapping.Table;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
 @Table("ROLE")
-public class Role implements Persistable<String> {
+public class Role {
 
 	@Id
+	@Column("ID")
+	private Long id;
+	
 	@Column("NAME")
 	private String name;
 
 	public Role() {
 		super();
+	}
+	
+	public Long getId() {
+		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
 	}
 
 	public String getName() {
@@ -24,18 +32,6 @@ public class Role implements Persistable<String> {
 
 	public void setName(String name) {
 		this.name = name;
-	}
-
-	@JsonIgnore
-	@Override
-	public String getId() {
-		return getName();
-	}
-
-	@JsonIgnore
-	@Override
-	public boolean isNew() {
-		return true;
 	}
 
 	@Override

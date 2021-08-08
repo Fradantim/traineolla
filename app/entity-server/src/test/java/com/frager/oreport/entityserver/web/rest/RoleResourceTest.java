@@ -46,7 +46,7 @@ class RoleResourceTest {
 				.exchange().expectStatus().isCreated();
 
 		// Validar que el nuevo rol existe en la BBDD
-		roleRepository.findById(newRole.getName()).switchIfEmpty(Mono.just(new Role())).subscribe(c -> {
+		roleRepository.findOneByName(newRole.getName()).switchIfEmpty(Mono.just(new Role())).subscribe(c -> {
 			assertThat(c).isNotNull();
 			assertThat(newRole.getName()).isEqualTo(c.getName());
 		});
@@ -88,9 +88,9 @@ class RoleResourceTest {
 		// Inicializo
 		Role newRole = new Role();
 		newRole.setName("new-role-" + LocalDateTime.now());
-		roleRepository.save(newRole).block();
+		newRole = roleRepository.save(newRole).block();
 
-		webTestClient.get().uri(RoleResource.PATH + "/{id}", newRole.getName()).accept(MediaType.APPLICATION_JSON)
+		webTestClient.get().uri(RoleResource.PATH + "/{id}", newRole.getId()).accept(MediaType.APPLICATION_JSON)
 				.exchange().expectStatus().isOk().expectHeader().contentType(MediaType.APPLICATION_JSON).expectBody()
 				.jsonPath("$.name").value(is(newRole.getName()));
 	}
@@ -106,15 +106,15 @@ class RoleResourceTest {
 		// Inicializo
 		Role newRole = new Role();
 		newRole.setName("new-role-" + LocalDateTime.now());
-		roleRepository.save(newRole).block();
+		newRole = roleRepository.save(newRole).block();
 
 		Long databaseSizeBeforeDelete = roleRepository.count().block();
 
-		webTestClient.delete().uri(RoleResource.PATH + "/{id}", newRole.getName()).accept(MediaType.APPLICATION_JSON)
+		webTestClient.delete().uri(RoleResource.PATH + "/{id}", newRole.getId()).accept(MediaType.APPLICATION_JSON)
 				.exchange().expectStatus().isNoContent();
 
 		// Validar que los numeros cierren
-		StepVerifier.create(roleRepository.findById(newRole.getName())).expectComplete();
+		StepVerifier.create(roleRepository.findById(newRole.getId())).expectComplete();
 		assertThat(roleRepository.count().block()).isEqualTo(databaseSizeBeforeDelete - 1);
 	}
 }

@@ -5,7 +5,10 @@ import org.springframework.stereotype.Repository;
 
 import com.frager.oreport.entityserver.model.Role;
 
-@Repository
-public interface RoleRepository extends ReactiveCrudRepository<Role, String> {
+import reactor.core.publisher.Mono;
 
+@Repository
+public interface RoleRepository extends ReactiveCrudRepository<Role, Long> {
+
+	public Mono<Role> findOneByName(String name);
 }

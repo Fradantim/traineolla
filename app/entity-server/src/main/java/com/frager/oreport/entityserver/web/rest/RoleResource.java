@@ -62,7 +62,7 @@ public class RoleResource {
 	}
 
 	@GetMapping("/{id}")
-	public Mono<ResponseEntity<Role>> getRole(@PathVariable String id) {
+	public Mono<ResponseEntity<Role>> getRole(@PathVariable Long id) {
 		logger.debug("REST request consultando rol : {}", id);
 		Mono<Role> role = roleService.findById(id);
 		return ResponseUtil.wrapOrNotFound(role);
@@ -70,7 +70,7 @@ public class RoleResource {
 
 	@DeleteMapping("/{id}")
 	@ResponseStatus(code = HttpStatus.NO_CONTENT)
-	public Mono<ResponseEntity<Void>> deleteRole(@PathVariable String id) {
+	public Mono<ResponseEntity<Void>> deleteRole(@PathVariable Long id) {
 		logger.debug("REST request borrar rol : {}", id);
 		return roleService.delete(id).then(Mono.just(0)).map(result -> ResponseEntity.noContent()
 				.headers(headerService.createEntityDeletionAlert(Role.class, id)).build());

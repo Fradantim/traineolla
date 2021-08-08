@@ -54,10 +54,16 @@ databaseChangeLog:
         tableName: COURSE
         columns:
         - column:
+            autoIncrement: true
             constraints:
                 primaryKey: true
                 primaryKeyName: COURSE_PK
             name: ID
+            type: BIGINT
+        - column:
+            constraints:
+                unique: true
+            name: UDEMY_ID
             type: BIGINT
         - column:
             name: TITLE
@@ -90,6 +96,12 @@ databaseChangeLog:
         - column:
             name: TITLE
         indexName: COURSE_IDX_TITLE
+    - createIndex:
+        tableName: COURSE
+        columns:
+        - column:
+            name: UDEMY_ID
+        indexName: COURSE_IDX_UDEMY_ID
 - changeSet:
     id: 202108030000-initial-schema-05-create-course-learning-path
     author: oreport.db-util
@@ -121,22 +133,44 @@ databaseChangeLog:
         tableName: ROLE
         columns:
         - column:
+            autoIncrement: true
             constraints:
                 primaryKey: true
                 primaryKeyName: ROLE_PK
+            name: ID
+            type: BIGINT
+        - column:
+            constraints:
+                unique: true
             name: NAME
             type: VARCHAR(255)
 - changeSet:
-    id: 202108030000-initial-schema-07-create-user
+    id: 202108030000-initial-schema-07-create-role-idx
+    author: oreport.db-util
+    changes:
+    - createIndex:
+        tableName: ROLE
+        columns:
+        - column:
+            name: NAME
+        indexName: ROLE_IDX_NAME
+- changeSet:
+    id: 202108030000-initial-schema-08-create-user
     author: oreport.db-util
     changes:
     - createTable:
         tableName: USER
         columns:
         - column:
+            autoIncrement: true
             constraints:
                 primaryKey: true
                 primaryKeyName: USER_PK
+            name: ID
+            type: BIGINT
+        - column:
+            constraints:
+                unique: true
             name: LOGIN
             type: VARCHAR(255)
         - column:
@@ -156,7 +190,17 @@ databaseChangeLog:
             name: RESET_PASSWORD
             type: VARCHAR(255)
 - changeSet:
-    id: 202108030000-initial-schema-08-create-role-user
+    id: 202108030000-initial-schema-09-create-user-idx
+    author: oreport.db-util
+    changes:
+    - createIndex:
+        tableName: USER
+        columns:
+        - column:
+            name: LOGIN
+        indexName: USER_IDX_LOGIN
+- changeSet:
+    id: 202108030000-initial-schema-10-create-role-user
     author: oreport.db-util
     changes:
     - createTable:
@@ -167,47 +211,47 @@ databaseChangeLog:
                 primaryKey: true
                 primaryKeyName: ROLE_USER_PK
                 foreignKeyName: ROLE_USER_FK_USER
-                references: USER(LOGIN)
-            name: USER_LOGIN
-            type: VARCHAR(255)
+                references: USER(ID)
+            name: USER_ID
+            type: BIGINT
         - column:
             constraints:
                 primaryKey: true
                 primaryKeyName: ROLE_USER_PK
                 foreignKeyName: ROLE_USER_FK_ROLE
-                references: ROLE(NAME)
-            name: ROLE_NAME
-            type: VARCHAR(255)
+                references: ROLE(ID)
+            name: ROLE_ID
+            type: BIGINT
 - changeSet:
-    id: 202108030000-initial-schema-09-add-admin
+    id: 202108030000-initial-schema-11-add-admin
     author: oreport.db-util
     changes:
     - insert:
         tableName: ROLE
-        columns:  
-        -  column:  
+        columns: 
+        - column:  
             name: NAME  
             value: admin
     - insert:
         tableName: USER
         columns:  
-        -  column:  
+        - column:  
             name: LOGIN  
             value: admin
-        -  column:  
+        - column:  
             name: LOGIN_ENABLED  
             value: true
     - insert:
         tableName: ROLE_USER
         columns:  
         -  column:  
-            name: USER_LOGIN  
-            value: admin
+            name: USER_ID
+            valueComputed: "(SELECT ID FROM USER WHERE LOGIN='admin')"
         -  column:  
-            name: ROLE_NAME  
-            value: admin
+            name: ROLE_ID
+            valueComputed: "(SELECT ID FROM ROLE WHERE NAME='admin')"
 - changeSet:
-    id: 202108030000-initial-schema-10-create-course-user-snapshot
+    id: 202108030000-initial-schema-12-create-course-user-snapshot
     author: oreport.db-util
     changes:
     - createTable:
@@ -218,9 +262,9 @@ databaseChangeLog:
                 primaryKey: true
                 primaryKeyName: COURSE_USER_SNAPSHOT_PK
                 foreignKeyName: COURSE_USER_SNAPSHOT_FK_USER
-                references: USER(LOGIN)
-            name: USER_LOGIN
-            type: VARCHAR(255)
+                references: USER(ID)
+            name: USER_ID
+            type: BIGINT
         - column:
             constraints:
                 primaryKey: true
@@ -254,7 +298,7 @@ databaseChangeLog:
             name: COURSE_FIRST_COMPLETION_DATE
             type: DATETIME
 - changeSet:
-    id: 202108030000-initial-schema-11-create-learning-path-user
+    id: 202108030000-initial-schema-13-create-learning-path-user
     author: oreport.db-util
     changes:
     - createTable:
@@ -265,9 +309,9 @@ databaseChangeLog:
                 primaryKey: true
                 primaryKeyName: LEARNING_PATH_USER_PK
                 foreignKeyName: LEARNING_PATH_USER_FK_USER
-                references: USER(LOGIN)
-            name: USER_LOGIN
-            type: VARCHAR(255)
+                references: USER(ID)
+            name: USER_ID
+            type: BIGINT
         - column:
             constraints:
                 primaryKey: true

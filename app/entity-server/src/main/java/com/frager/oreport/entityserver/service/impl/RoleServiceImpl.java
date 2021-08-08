@@ -25,7 +25,7 @@ public class RoleServiceImpl implements RoleService {
 	}
 
 	@Override
-	public Mono<Role> findById(String id) {
+	public Mono<Role> findById(Long id) {
 		return roleRepository.findById(id);
 	}
 
@@ -35,7 +35,7 @@ public class RoleServiceImpl implements RoleService {
 	}
 	
 	@Override
-	public Mono<Void> delete(String id) {
+	public Mono<Void> delete(Long id) {
 		return roleRepository.deleteById(id);
 	}
 }
