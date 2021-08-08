@@ -1,17 +1,19 @@
 package com.frager.oreport.entityserver.model;
 
 import org.springframework.data.annotation.Id;
-import org.springframework.data.relational.core.mapping.Column;
-import org.springframework.data.relational.core.mapping.Table;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Table;
 
-@Table("ROLE")
+@Entity
+@Table(name="ROLE")
 public class Role {
-
+	
 	@Id
-	@Column("ID")
+	@Column(name="ID")
 	private Long id;
 	
-	@Column("NAME")
+	@Column(name="NAME")
 	private String name;
 
 	public Role() {

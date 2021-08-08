@@ -19,6 +19,11 @@ public class JHipsterHeaderService implements HeaderService {
 	private String applicationName;
 
 	@Override
+	public HttpHeaders createAlert(String message, Object param) {
+		return HeaderUtil.createAlert(applicationName, message, String.valueOf(param));
+	}
+
+	@Override
 	public HttpHeaders createEntityCreationAlert(Class<?> entityClass, Object param) {
 		return createEntityCreationAlert(entityClass.getSimpleName(), param);
 	}
@@ -26,7 +31,7 @@ public class JHipsterHeaderService implements HeaderService {
 	@Override
 	public HttpHeaders createEntityCreationAlert(String entityName, Object param) {
 		String message = "Un nuevo '" + entityName + "' fue creado con id '" + param + "'.";
-		return HeaderUtil.createAlert(applicationName, message, String.valueOf(param));
+		return createAlert(message, String.valueOf(param));
 	}
 
 	@Override
@@ -37,6 +42,6 @@ public class JHipsterHeaderService implements HeaderService {
 	@Override
 	public HttpHeaders createEntityDeletionAlert(String entityName, Object param) {
 		String message = "Un '" + entityName + "' con id '" + param + "' fue borrado.";
-		return HeaderUtil.createAlert(applicationName, message, String.valueOf(param));
+		return createAlert(message, String.valueOf(param));
 	}
 }
