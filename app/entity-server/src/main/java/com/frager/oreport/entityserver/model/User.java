@@ -34,8 +34,8 @@ public class User {
 	@ManyToMany(fetch=FetchType.EAGER)
 	@JoinTable(
 			  name = "ROLE_USER", 
-			  joinColumns = @JoinColumn(name = "USER_ID"), 
-			  inverseJoinColumns = @JoinColumn(name = "ROLE_ID"))
+			  joinColumns = @JoinColumn(name = "ID", referencedColumnName="USER_ID"), 
+			  inverseJoinColumns = @JoinColumn(name = "ROLE_ID", referencedColumnName="ID"))
 	private Set<Role> roles = Collections.emptySet();
 
 	public User() {
