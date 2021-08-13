@@ -12,12 +12,14 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import javax.annotation.PostConstruct;
 import javax.persistence.FetchType;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.annotation.Id;
 import org.springframework.data.relational.core.sql.Table;
 import org.springframework.stereotype.Service;
 
@@ -43,6 +45,8 @@ public class EntityReflector {
 
 	private Map<Class<?>, Table> tableByClass;
 
+	private Map<Class<?>, String> idColumnNameByClass;
+	
 	private Map<Class<?>, Set<String>> columnNamesByClass;
 
 	private Map<Class<?>, Map<String, Method>> columnSettersByClass;
@@ -56,11 +60,12 @@ public class EntityReflector {
 	private Map<Class<?>, Map<String, MultiModelRef>> eagerMultiModelRefByClass;
 
 	@PostConstruct
-	public void loadEntitiesColumns() {
+	private void loadEntitiesColumns() {
 		logger.debug("Cache JPA inicia carga.");
 		List<Class<?>> appEntities = Arrays.asList(Role.class, User.class);
 
 		tableByClass = new HashMap<>();
+		idColumnNameByClass = new HashMap<>();
 		columnNamesByClass = new HashMap<>();
 		columnSettersByClass = new HashMap<>();
 		eagerRefModelsByClass = new HashMap<>();
@@ -74,6 +79,8 @@ public class EntityReflector {
 			logger.debug("Trabajando clase:{}, tabla:{}", c.getSimpleName(), tableByClass.get(c));
 			columnNamesByClass.put(c, buildColumnNames(c));
 			logger.debug("Trabajando clase:{}, columnas:{}", c.getSimpleName(), columnNamesByClass.get(c));
+			idColumnNameByClass.put(c, findIdColumnName(c));
+			logger.debug("Trabajando clase:{}, id-columna:{}", c.getSimpleName(), idColumnNameByClass.get(c));
 			columnSettersByClass.put(c, buildSettersForColumns(c));
 			logger.debug("Trabajando clase:{}, setters4Columns:{}", c.getSimpleName(), columnSettersByClass.get(c));
 			eagerRefModelsByClass.put(c, buildEagerRelatedObjects(c));
@@ -131,16 +138,30 @@ public class EntityReflector {
 
 		return aClass.getSimpleName();
 	}
+	
+	public String getIdColumnName(Class<?> aClass) {
+		return idColumnNameByClass.get(aClass);
+	}
 
 	public Table getTable(Class<?> aClass) {
 		return tableByClass.get(aClass);
 	}
 
 	public Set<String> buildColumnNames(Class<?> aClass) {
-		return Arrays.stream(aClass.getDeclaredFields()).filter(this::fieldIsNotTransient)
-				.filter(this::fieldDoesNotRefferToAnotherModel).map(f -> getColumnName(f)).collect(Collectors.toSet());
+		return getColumnFields(aClass).map(f -> getColumnName(f)).collect(Collectors.toSet());
 	}
-
+	
+	public String findIdColumnName(Class<?> aClass) {
+		return getColumnFields(aClass).filter(f -> {
+			return f.getAnnotation(javax.persistence.Id.class) != null ||
+					f.getAnnotation(Id.class) != null; 
+		}).findFirst().map(f -> getColumnName(f)).orElse("id");
+	}
+	
+	private Stream<Field> getColumnFields(Class<?> aClass) {
+		return Arrays.stream(aClass.getDeclaredFields()).filter(this::fieldIsNotTransient)
+				.filter(this::fieldDoesNotRefferToAnotherModel);
+	}
 	private String getSetterName(Field f) {
 		return "set" + f.getName().toUpperCase().charAt(0) + f.getName().substring(1);
 	}

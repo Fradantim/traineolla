@@ -1,5 +1,7 @@
 package com.frager.oreport.entityserver.repository;
 
+import javax.annotation.Nullable;
+
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.relational.core.query.Criteria;
 
@@ -14,9 +16,9 @@ public interface Repository<T> {
 
 	Mono<T> findById(Long id);
 
-	Flux<T> findAllBy(Pageable pageable);
+	Flux<T> findAllBy(@Nullable Pageable pageable);
 
-	Flux<T> findAllBy(Pageable pageable, Criteria criteria);
+	Flux<T> findAllBy(@Nullable Pageable pageable, @Nullable Criteria criteria);
 	
 	Mono<Void> deleteById(Long id);
 }

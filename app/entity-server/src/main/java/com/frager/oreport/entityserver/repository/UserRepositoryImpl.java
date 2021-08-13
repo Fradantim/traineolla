@@ -13,7 +13,6 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Optional;
 import java.util.Set;
-import java.util.concurrent.atomic.AtomicBoolean;
 
 import javax.annotation.PostConstruct;
 import javax.validation.constraints.NotNull;
@@ -21,16 +20,27 @@ import javax.validation.constraints.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.r2dbc.core.R2dbcEntityTemplate;
+import org.springframework.data.r2dbc.query.UpdateMapper;
+import org.springframework.data.relational.core.mapping.RelationalPersistentEntity;
 import org.springframework.data.relational.core.query.Criteria;
+import org.springframework.data.relational.core.sql.AsteriskFromTable;
 import org.springframework.data.relational.core.sql.Column;
+import org.springframework.data.relational.core.sql.Condition;
+import org.springframework.data.relational.core.sql.Conditions;
 import org.springframework.data.relational.core.sql.Expression;
+import org.springframework.data.relational.core.sql.OrderByField;
 import org.springframework.data.relational.core.sql.Select;
 import org.springframework.data.relational.core.sql.SelectBuilder.SelectFromAndJoin;
 import org.springframework.data.relational.core.sql.SelectBuilder.SelectFromAndJoinCondition;
 import org.springframework.data.relational.core.sql.SelectBuilder.SelectJoin;
 import org.springframework.data.relational.core.sql.SelectBuilder.SelectOn;
+import org.springframework.data.relational.core.sql.SelectBuilder.SelectOrdered;
+import org.springframework.data.relational.core.sql.SelectBuilder.SelectWhereAndOr;
+import org.springframework.data.relational.core.sql.render.SqlRenderer;
 import org.springframework.data.relational.core.sql.Table;
+import org.springframework.data.relational.core.sql.TrueCondition;
 import org.springframework.r2dbc.core.DatabaseClient;
 import org.springframework.r2dbc.core.RowsFetchSpec;
 
@@ -55,17 +65,21 @@ public class UserRepositoryImpl implements Repository<User> {
 	private EntityManager entityManager;
 	private EntityReflector entityReflector;
 	private ColumnConverter converter;
+	private UpdateMapper updateMapper;
+	private SqlRenderer sqlRenderer;
 
 	private Table entityTable;;
 	//private Table roleTable = Table.aliased("role", "role");
 
 	public UserRepositoryImpl(R2dbcEntityTemplate template, EntityManager entityManager,
-			EntityReflector entityReflector, ColumnConverter converter) {
+			EntityReflector entityReflector, ColumnConverter converter, UpdateMapper updateMapper, SqlRenderer sqlRenderer) {
 		this.db = template.getDatabaseClient();
 		this.r2dbcEntityTemplate = template;
 		this.entityManager = entityManager;
 		this.entityReflector = entityReflector;
 		this.converter = converter;
+		this.updateMapper = updateMapper;
+		this.sqlRenderer = sqlRenderer;
 	}
 	
 	@PostConstruct
@@ -107,7 +121,7 @@ public class UserRepositoryImpl implements Repository<User> {
 
 	@Override
 	public Mono<User> findById(Long id) {
-		return createQuery(null, where("id").is(id)).one();
+		return createAndExecuteQuery(null, where("id").is(id)).one();
 	}
 
 	@Override
@@ -117,113 +131,182 @@ public class UserRepositoryImpl implements Repository<User> {
 
 	@Override
 	public Flux<User> findAllBy(Pageable pageable, Criteria criteria) {
-		return createQuery(pageable, criteria).all();
+		return createAndExecuteQuery(pageable, criteria).all();
 	}
 
-	private RowsFetchSpec<User> createQuery(Pageable pageable, Criteria criteria) {
-		try {
-			logger.debug("createQuery -> SELECT (...)");
-			List<Expression> columns = new ArrayList<>();
-			
-			entityReflector.getColumnNames(getMasterClass()).stream().forEach(c -> {
-				columns.add(Column.aliased(c, entityTable, EntityManager.ENTITY_ALIAS + "_" + c));
+	/**
+	 * Retorna una sentencia sql de la forma: <br/>
+	 * 
+	 * <pre>
+	 * SELECT this.col1, this.col2, ...
+	 * FROM TABLA this
+	 * WHERE (condiciones sobre columnas this.* (opcional segun el atributo criteria) )
+	 * ORDER BY (ordenamientos sobre columnas this.* (opcional segun el atributo pageable) )
+	 * OFFSET N ROWS FETCH NEXT M ROWS ONLY (opcional segun el atributo pageable)
+	 * </pre>
+	 */
+	private String createTableQuery(Pageable pageable, Criteria criteria) {
+		logger.debug("createTableQuery ->");
+		List<Expression> columns = new ArrayList<>();
+
+		entityReflector.getColumnNames(getMasterClass()).stream().forEach(c -> {
+			columns.add(Column.create(c, entityTable));
+		});
+
+		logger.debug("createTableQuery -> SELECT {}", columns);
+
+		SelectFromAndJoin selectFrom = Select.builder().select(columns).from(entityTable);
+
+		logger.debug("createTableQuery -> SELECT (...) FROM {}", entityTable);
+
+		if (pageable != null) {
+			selectFrom = selectFrom.limitOffset(pageable.getPageSize(), pageable.getOffset());
+			logger.debug("createTableQuery -> SELECT (...) PAGE {}", pageable);
+		}
+
+		SelectWhereAndOr selectFromWhere;
+		if (criteria != null) {
+			Condition theCondition = Conditions.just(criteria.toString());
+			selectFromWhere = selectFrom.where(theCondition);
+			logger.debug("createTableQuery -> SELECT (...) WHERE {}", theCondition);
+		} else {
+			selectFromWhere = selectFrom.where(TrueCondition.INSTANCE);
+		}
+
+		SelectOrdered originalSelectFromConditionatedSorted = null;
+		if (pageable != null && pageable.getSort() != null && pageable.getSort().isSorted()) {
+			RelationalPersistentEntity<?> entity = getPersistentEntity(getMasterClass());
+			if (entity != null) {
+				Sort sort = updateMapper.getMappedObject(pageable.getSort(), entity);
+				Collection<? extends OrderByField> orderBy = createOrderByFields(entityTable, sort);
+				originalSelectFromConditionatedSorted = selectFromWhere.orderBy(orderBy);
+				logger.debug("createTableQuery -> SELECT (...) ORDER BY {}", orderBy);
+			}
+		}
+
+		if (originalSelectFromConditionatedSorted == null) {
+			originalSelectFromConditionatedSorted = selectFromWhere
+					.orderBy(createOrderByField(entityTable, entityReflector.getIdColumnName(getMasterClass())));
+		}
+		String sqlQuery = sqlRenderer.render(originalSelectFromConditionatedSorted.build());
+		logger.debug("createTableQuery -> SELECT STMT: {}", sqlQuery);
+		return sqlQuery;
+	}
+
+	/**
+	 * Retorna una sentencia sql de la forma: <br/>
+	 * 
+	 * <pre>
+	 * SELECT this.*, attr1.col1, attr1.col2, attr2.col1, ...
+	 * FROM (inner-query) this
+	 * LEFT OUTER JOIN TABLA_ATRIBUTO_1 attr1 ON this.id = attr1.foreignKey
+	 * LEFT OUTER JOIN TABLA_ATRIBUTO_2 attr1 ON this.id = attr2.foreignKey
+	 * ...
+	 * </pre>
+	 * 
+	 * Donde <code>(inner-query)</code> es la sentencia generada por {@link #createTableQuery(Pageable, Criteria)}. <br />
+	 * 
+	 * En caso de que la entidad {@link #getMasterClass()} no indique relaciones eager se retorna 
+	 * directamente el resultado de {@link #createTableQuery(Pageable, Criteria)}.
+	 */
+	private String createFullQuery(Pageable pageable, Criteria criteria) {
+		String tableQuery = createTableQuery(pageable, criteria);
+		
+		Map<String, Class<?>> eagerRerences = entityReflector.getEagerRefModels(getMasterClass());
+		if (eagerRerences == null || eagerRerences.isEmpty())
+			return tableQuery;
+		
+		Table innerQuery = Table.create("(" + tableQuery + ")").as(EntityManager.ENTITY_ALIAS);
+		List<Expression> columns = new ArrayList<>();
+		
+		columns.add(AsteriskFromTable.create(innerQuery));
+
+		logger.debug("createFullQuery -> SELECT {}", columns);
+
+		Map<String, Table> directlyLinkedTables = new HashMap<>();
+		eagerRerences.forEach((fieldName, fieldClass) -> {
+			Table linkedTable = entityReflector.getTable(fieldClass).as(fieldName);
+			entityReflector.getColumnNames(fieldClass).stream().forEach(c -> {
+				columns.add(Column.create(c, linkedTable));
 			});
 
-			logger.debug("createQuery -> SELECT {}", columns);
-			
-			Map<String, Class<?>> eagerRerences = entityReflector.getEagerRefModels(getMasterClass());
-			Map<String, Table> directlyLinkedTables = new HashMap<>();
-			
-			if (eagerRerences != null && !eagerRerences.isEmpty()) {
-				eagerRerences.forEach( (fieldName, fieldClass) -> {
-					Table linkedTable = entityReflector.getTable(fieldClass).as(fieldName);
-					entityReflector.getColumnNames(fieldClass).stream().forEach(c -> {
-						columns.add(Column.aliased(c, linkedTable, fieldName + "_" + c));
-					});
-					
-					directlyLinkedTables.put(fieldName, linkedTable);
-					
-					logger.debug("createQuery -> SELECT {}", columns);
-				});
-			}
-			
-			AtomicBoolean needsToGroup = new AtomicBoolean(false);
-			
-			// SelectFromAndJoin selectFrom = Select.builder().select(columns).from(entityTable); ORIGINAL
-			
-			SelectFromAndJoin originalSelectFrom = Select.builder().select(columns).from(entityTable);
-			SelectFromAndJoinCondition expandedSelect = null;
-			// SelectJoin selectFrom = Select.builder().select(Expressions.asterisk()).from(entityTable);
-			// Select.builder().select(columns).from(entityTable).where(TrueCondition.INSTANCE);
-			
-			logger.debug("createQuery -> SELECT {} FROM {}", columns, entityTable);
-			
-			if (eagerRerences != null && !eagerRerences.isEmpty()) {
-				for (Entry<String, Class<?>> entry : eagerRerences.entrySet()) {
-					String fieldName = entry.getKey();
-					Class<?> fieldClass = entry.getValue();
+			directlyLinkedTables.put(fieldName, linkedTable);
 
-					SingleModelRef smr = entityReflector.getEagerSingleModelReferences(getMasterClass(), fieldName);
-					if(smr != null) {
+			logger.debug("createFullQuery -> SELECT {}", columns);
+		});
+
+		SelectFromAndJoin selectFrom = Select.builder().select(columns).from(innerQuery);
+		
+		SelectFromAndJoinCondition expandedSelect = null;
+		
+		Boolean needsToGroup = false;
+		if (eagerRerences != null && !eagerRerences.isEmpty()) {
+			for (Entry<String, Class<?>> entry : eagerRerences.entrySet()) {
+				String fieldName = entry.getKey();
+
+				SingleModelRef smr = entityReflector.getEagerSingleModelReferences(getMasterClass(), fieldName);
+				if(smr != null) {
+					// TODO en algun momento deberia probar este caso
+					Table otherTable = directlyLinkedTables.get(fieldName);
+					expandedSelect = addFullOuterJoin(getFirstNonNull(expandedSelect, selectFrom), smr, entityTable, otherTable);
+				}
+				
+				MultiModelRef mmr = entityReflector.getEagerMultiModelRef(getMasterClass(), fieldName);
+				if(mmr != null) {
+					needsToGroup = true;
+					
+					if (mmr.getJoinColumn() != null) {
+						// o2m /m2o
 						// TODO en algun momento deberia probar este caso
 						Table otherTable = directlyLinkedTables.get(fieldName);
-						expandedSelect = addFullOuterJoin(expandedSelect != null ? expandedSelect : originalSelectFrom, smr, entityTable, otherTable);
+						expandedSelect = addFullOuterJoin(getFirstNonNull(expandedSelect, selectFrom), mmr, entityTable, otherTable);
 					}
 					
-					MultiModelRef mmr = entityReflector.getEagerMultiModelRef(getMasterClass(), fieldName);
-					if(mmr != null) {
-						needsToGroup.set(true);
+					if (mmr.getJoinTable() != null) {
+						// m2m
+						Table midleTable = Table.create(mmr.getJoinTable().name()).as(EntityManager.ENTITY_ALIAS+"_"+fieldName);
+						expandedSelect = addFullOuterJoin(getFirstNonNull(expandedSelect, selectFrom), mmr.getMiddleModelRef(), entityTable, midleTable);
 						
-						if (mmr.getJoinColumn() != null) {
-							// o2m /m2o
-							// TODO en algun momento deberia probar este caso
-							Table otherTable = directlyLinkedTables.get(fieldName);
-							expandedSelect = addFullOuterJoin(expandedSelect != null ? expandedSelect : originalSelectFrom, mmr, entityTable, otherTable);
-						}
-						
-						if (mmr.getJoinTable() != null) {
-							// m2m
-							Table midleTable = Table.create(mmr.getJoinTable().name()).as(EntityManager.ENTITY_ALIAS+"_"+fieldName);
-							expandedSelect = addFullOuterJoin(expandedSelect != null ? expandedSelect : originalSelectFrom, mmr.getMiddleModelRef(), entityTable, midleTable);
-							
-							Table otherTable = directlyLinkedTables.get(fieldName);
-							expandedSelect = addFullOuterJoin(expandedSelect != null ? expandedSelect : originalSelectFrom, mmr.getEndModelRef(), midleTable, otherTable);
-						}
+						Table otherTable = directlyLinkedTables.get(fieldName);
+						expandedSelect = addFullOuterJoin(getFirstNonNull(expandedSelect, selectFrom), mmr.getEndModelRef(), midleTable, otherTable);
 					}
 				}
 			}
-
-			String select;
-			if (expandedSelect != null) {
-				select = entityManager.createSelect(expandedSelect, getMasterClass(), pageable, criteria);
-			} else {
-				select = entityManager.createSelect(originalSelectFrom, getMasterClass(), pageable, criteria);
-			}
-			
-			logger.debug("SELECT STMT: {}", select);
-			
-			String alias = entityTable.getReferenceName().getReference();
-
-			String selectWhere = Optional.ofNullable(criteria).map(crit -> new StringBuilder(select).append(" ")
-					.append("WHERE").append(" ").append(alias).append(".").append(crit.toString()).toString())
-					.orElse(select); // TODO remove once
-										// https://github.com/spring-projects/spring-data-jdbc/issues/907 will be fixed
-			return db.sql(selectWhere).map(this::process);
-		} catch (Exception e) {
-			logger.error("Oops " + e.getMessage());
-			return new RowsFetchSpec<User>() {
-
-				@Override
-				public Mono<User> one() { return null; }
-
-				@Override
-				public Mono<User> first() { return null; }
-
-				@Override
-				public Flux<User> all() { return Flux.empty(); } 
-			};
 		}
+
+		String select;
+		if (expandedSelect != null) {
+			select = entityManager.createSelect(expandedSelect, getMasterClass(), pageable, criteria);
+		} else {
+			select = entityManager.createSelect(selectFrom, getMasterClass(), pageable, criteria);
+		}
+		
+		logger.debug("SELECT STMT: {}", select);
+		
+		String alias = entityTable.getReferenceName().getReference();
+
+		String selectWhere = Optional.ofNullable(criteria).map(crit -> new StringBuilder(select).append(" ")
+				.append("WHERE").append(" ").append(alias).append(".").append(crit.toString()).toString())
+				.orElse(select); // TODO remove once
+									// https://github.com/spring-projects/spring-data-jdbc/issues/907 will be fixed
+		return selectWhere;
 	}
+	
+	private SelectJoin getFirstNonNull(SelectJoin... selects) {
+		for(SelectJoin select : selects)
+			if (select != null)
+				return select;
+		return null;
+	}
+	
+	private RowsFetchSpec<User> createAndExecuteQuery(Pageable pageable, Criteria criteria) {
+		String querystatement = createFullQuery(pageable, criteria);
+		return db.sql(querystatement).map(this::process);			
+	}
+	
+	private RelationalPersistentEntity<?> getPersistentEntity(Class<?> entityType) {
+        return r2dbcEntityTemplate.getConverter().getMappingContext().getPersistentEntity(entityType);
+    }
 	
 	private SelectFromAndJoinCondition addFullOuterJoin(SelectJoin select, SingleModelRef smr, Table thisTable, Table otherTable) {
 		logger.debug("createQuery -> SELECT (...) LEFT OUTER JOIN {}", otherTable);
@@ -247,7 +330,7 @@ public class UserRepositoryImpl implements Repository<User> {
 	private User process(Row row, RowMetadata metadata) {
 		logger.trace("Parsing row {}", row);
 		Object entity = instanceAndFillFromColumns(getMasterClass(), EntityManager.ENTITY_ALIAS, row);
-
+		
 		// Atributos relacionados a entity cargados de forma eager
 		entityReflector.getEagerRefModels(getMasterClass()).forEach( (fieldName, fieldClass) -> {
 			Object entityEagerAtribute = instanceAndFillFromColumns(fieldClass, fieldName, row);
@@ -304,8 +387,7 @@ public class UserRepositoryImpl implements Repository<User> {
 			Method m = entityReflector.getColumnSetter(entity.getClass(), c);
 
 			try {
-				m.invoke(entity, converter.fromRow(row, prefix + "_" + c,
-						(Class<?>) m.getParameters()[0].getParameterizedType()));
+				m.invoke(entity, converter.fromRow(row, c, (Class<?>) m.getParameters()[0].getParameterizedType()));
 			} catch (Exception e) {
 				throw new RuntimeException("Error al invocar setter por reflexion, clase:"
 						+ newInstanceClass.getSimpleName() + ", metodo:" + m + ".", e);
@@ -334,4 +416,21 @@ public class UserRepositoryImpl implements Repository<User> {
 		// TODO destrabar
 		return Mono.empty();
 	    }
+	
+    private static Collection<? extends OrderByField> createOrderByFields(Table table, Sort sortToUse) {
+        List<OrderByField> fields = new ArrayList<>();
+
+        for (Sort.Order order : sortToUse) {
+            String propertyName = order.getProperty();
+            OrderByField orderByField = createOrderByField(table, propertyName);
+
+            fields.add(order.isAscending() ? orderByField.asc() : orderByField.desc());
+        }
+
+        return fields;
+    }
+    
+    private static OrderByField createOrderByField(Table table, String propertyName) {
+        return OrderByField.from(table.column(propertyName));
+    }
 }
