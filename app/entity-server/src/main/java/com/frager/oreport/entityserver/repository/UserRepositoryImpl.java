@@ -11,6 +11,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -283,7 +284,20 @@ public class UserRepositoryImpl implements Repository<User> {
 			if (entity != null) {
 				Sort sort = updateMapper.getMappedObject(pageable.getSort(), entity);
 				Collection<OrderByField> orderBy = createOrderByFields(entityTable, sort);
-				orderBy.add(createOrderByField(entityTable, entityReflector.getIdColumnName(getMasterClass())));
+				
+				String idColumnName = EntityManager.ENTITY_ALIAS+"."+entityReflector.getIdColumnName(getMasterClass());
+				
+				Optional<OrderByField> idOrderOpt = orderBy.stream().filter(o -> o.getExpression().toString().startsWith(idColumnName)).findFirst();
+				OrderByField idOrder = null;
+				
+				if(idOrderOpt.isPresent()) {
+					idOrder = idOrderOpt.get();
+				}
+
+				idOrder=idOrderOpt.orElse(createOrderByField(entityTable, entityReflector.getIdColumnName(getMasterClass()) + " ASC"));
+				
+				orderBy.add(idOrder); // refuerzo el sort original, pongo la columna id que mandaron (o una casera si
+										// no mandaron) para conservar ordern post joins
 				originalSelectFromConditionatedSorted = expandedSelect.orderBy(orderBy);
 				logger.debug("createAndExecuteQuery -> SELECT (...) ORDER BY {}", orderBy);
 			}
