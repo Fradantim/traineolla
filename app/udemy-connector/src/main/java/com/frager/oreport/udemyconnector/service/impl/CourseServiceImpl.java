@@ -33,8 +33,7 @@ public class CourseServiceImpl extends UdemyService implements CourseService {
 
 	@Override
 	public Mono<Course> getCourseById(Integer id, MultiValueMap<String, String> queryParams) {
-		Mono<Course> singleCourseMono = udemyClient.getCourseById(id, queryParams).map(this::foolishMapper);
-		return singleCourseMono;
+		return udemyClient.getCourseById(id, queryParams).map(this::foolishMapper);
 	}
 
 	@Override
@@ -45,10 +44,10 @@ public class CourseServiceImpl extends UdemyService implements CourseService {
 	@Override
 	public Flux<Course> getCourses(MultiValueMap<String, String> queryParams) {
 		Mono<PageResponse<ListedCourse>> listedCoursePageMono = udemyClient.getCourses(queryParams);
-		Flux<Course> currentFlux = listedCoursePageMono.flatMapMany(page -> {
+		Flux<Course> currentFlux = listedCoursePageMono.flatMapMany(page -> 
 			return Flux.fromIterable(page.getResults()).map(this::foolishMapper)
 					.concatWith(getNextPage(page.getNext(), this::getCourses));
-		});
+		);
 
 		if (logger.isDebugEnabled()) {
 			currentFlux.log();
