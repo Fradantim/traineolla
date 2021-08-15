@@ -44,10 +44,8 @@ public class CourseServiceImpl extends UdemyService implements CourseService {
 	@Override
 	public Flux<Course> getCourses(MultiValueMap<String, String> queryParams) {
 		Mono<PageResponse<ListedCourse>> listedCoursePageMono = udemyClient.getCourses(queryParams);
-		Flux<Course> currentFlux = listedCoursePageMono.flatMapMany(page -> 
-			return Flux.fromIterable(page.getResults()).map(this::foolishMapper)
-					.concatWith(getNextPage(page.getNext(), this::getCourses));
-		);
+		Flux<Course> currentFlux = listedCoursePageMono.flatMapMany(page -> Flux.fromIterable(page.getResults())
+				.map(this::foolishMapper).concatWith(getNextPage(page.getNext(), this::getCourses)));
 
 		if (logger.isDebugEnabled()) {
 			currentFlux.log();
