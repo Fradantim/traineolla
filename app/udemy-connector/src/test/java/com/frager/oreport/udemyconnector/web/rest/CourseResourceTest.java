@@ -22,9 +22,9 @@ import org.springframework.test.context.TestPropertySource;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.reactive.function.client.WebClient;
 
-import com.frager.oreport.udemyconnector.model.Course;
 import com.frager.oreport.udemyconnector.service.CourseService;
 import com.frager.oreport.udemyconnector.service.impl.CourseServiceImpl;
+import com.udemy.model.Course;
 
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;

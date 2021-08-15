@@ -7,12 +7,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.MultiValueMap;
 
 import com.frager.oreport.udemyconnector.client.UdemyClient;
-import com.frager.oreport.udemyconnector.mapper.CourseMapper;
-import com.frager.oreport.udemyconnector.model.Course;
 import com.frager.oreport.udemyconnector.service.CourseService;
+import com.udemy.model.Course;
 import com.udemy.model.ListedCourse;
 import com.udemy.model.PageResponse;
-import com.udemy.model.SingleCourse;
 
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -35,19 +33,20 @@ public class CourseServiceImpl extends UdemyService implements CourseService {
 
 	@Override
 	public Mono<Course> getCourseById(Integer id, MultiValueMap<String, String> queryParams) {
-		Mono<SingleCourse> singleCourseMono = udemyClient.getCourseById(id, queryParams);
-		return singleCourseMono.map(CourseMapper::fromSingleCourse);
+		Mono<Course> singleCourseMono = udemyClient.getCourseById(id, queryParams).map(this::foolishMapper);
+		return singleCourseMono;
 	}
 
+	@Override
 	public Flux<Course> getCourses() {
 		return getCourses(null);
 	}
 
+	@Override
 	public Flux<Course> getCourses(MultiValueMap<String, String> queryParams) {
 		Mono<PageResponse<ListedCourse>> listedCoursePageMono = udemyClient.getCourses(queryParams);
 		Flux<Course> currentFlux = listedCoursePageMono.flatMapMany(page -> {
-			logger.debug("Transformando pagina de {} elementos", page.getCount());
-			return Flux.fromIterable(page.getResults()).map(CourseMapper::fromListedCourse)
+			return Flux.fromIterable(page.getResults()).map(this::foolishMapper)
 					.concatWith(getNextPage(page.getNext(), this::getCourses));
 		});
 
@@ -56,5 +55,10 @@ public class CourseServiceImpl extends UdemyService implements CourseService {
 		}
 
 		return currentFlux;
+	}
+
+	/** Es un poco tonto, pero sirve para up-castear a {@link Course} */
+	private Course foolishMapper(Course c) {
+		return c;
 	}
 }

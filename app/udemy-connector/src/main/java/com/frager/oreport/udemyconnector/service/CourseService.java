@@ -3,7 +3,7 @@ package com.frager.oreport.udemyconnector.service;
 import org.springframework.lang.Nullable;
 import org.springframework.util.MultiValueMap;
 
-import com.frager.oreport.udemyconnector.model.Course;
+import com.udemy.model.Course;
 
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;

@@ -7,10 +7,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.MultiValueMap;
 
 import com.frager.oreport.udemyconnector.client.UdemyClient;
-import com.frager.oreport.udemyconnector.mapper.UserCourseActivityMapper;
-import com.frager.oreport.udemyconnector.model.UserCourseActivity;
 import com.frager.oreport.udemyconnector.service.UserCourseActivityService;
 import com.udemy.model.PageResponse;
+import com.udemy.model.UserCourseActivity;
 
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -33,10 +32,10 @@ public class UserCourseActivityServiceImpl extends UdemyService implements UserC
 
 	@Override
 	public Flux<UserCourseActivity> getUserCourseActivity(MultiValueMap<String, String> queryParams) {
-		Mono<PageResponse<com.udemy.model.UserCourseActivity>> userCourseActivityPageMono = udemyClient.getUserCourseActivity(queryParams);
+		Mono<PageResponse<UserCourseActivity>> userCourseActivityPageMono = udemyClient.getUserCourseActivity(queryParams);
 		Flux<UserCourseActivity> currentFlux = userCourseActivityPageMono.flatMapMany(page -> {
 			logger.debug("Transformando pagina de {} elementos", page.getCount());
-			return Flux.fromIterable(page.getResults()).map(UserCourseActivityMapper::from)
+			return Flux.fromIterable(page.getResults())
 					.concatWith(getNextPage(page.getNext(), this::getUserCourseActivity));
 		});
 

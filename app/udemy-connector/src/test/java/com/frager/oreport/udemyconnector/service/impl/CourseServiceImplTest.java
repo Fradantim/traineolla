@@ -21,7 +21,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.frager.oreport.udemyconnector.client.UdemyClient;
-import com.frager.oreport.udemyconnector.model.Course;
+import com.udemy.model.Course;
 import com.udemy.model.ListedCourse;
 import com.udemy.model.PageResponse;
 import com.udemy.model.SingleCourse;

@@ -20,8 +20,8 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.frager.oreport.udemyconnector.client.UdemyClient;
-import com.frager.oreport.udemyconnector.model.UserCourseActivity;
 import com.udemy.model.PageResponse;
+import com.udemy.model.UserCourseActivity;
 
 import reactor.core.publisher.Flux;
 

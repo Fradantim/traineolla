@@ -19,9 +19,9 @@ import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.reactive.function.client.WebClient;
 
-import com.frager.oreport.udemyconnector.model.UserCourseActivity;
 import com.frager.oreport.udemyconnector.service.UserCourseActivityService;
 import com.frager.oreport.udemyconnector.service.impl.UserCourseActivityServiceImpl;
+import com.udemy.model.UserCourseActivity;
 
 import reactor.core.publisher.Flux;
 
