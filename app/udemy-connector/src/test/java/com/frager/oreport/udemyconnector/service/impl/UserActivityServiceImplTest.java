@@ -21,16 +21,16 @@ import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.frager.oreport.udemyconnector.client.UdemyClient;
 import com.udemy.model.PageResponse;
-import com.udemy.model.UserCourseActivity;
+import com.udemy.model.UserActivity;
 
 import reactor.core.publisher.Flux;
 
 @SpringBootTest
 @TestPropertySource("classpath:secrets.mock.properties")
 @TestPropertySource("classpath:test.mock.properties")
-class UserCourseActivityServiceImplTest extends PagingTester {
+class UserActivityServiceImplTest extends PagingTester {
 
-	private static final TypeReference<PageResponse<UserCourseActivity>> PAGE_OF_UCA_TYPE_REF = new TypeReference<PageResponse<UserCourseActivity>>() {
+	private static final TypeReference<PageResponse<UserActivity>> PAGE_OF_UA_TYPE_REF = new TypeReference<PageResponse<UserActivity>>() {
 	};
 
 	@MockBean
@@ -39,12 +39,12 @@ class UserCourseActivityServiceImplTest extends PagingTester {
 	@Autowired
 	private ObjectMapper defaultObjectMapper;
 
-	@Value("#{'${user-course-activity.page.1.no-next}'.split('SPLITTER')}")
-	private List<String> userCourseActivityPages;
+	@Value("#{'${user-activity.page.1.no-next}'.split('SPLITTER')}")
+	private List<String> userActivityPages;
 
 	@Test
 	void getCoursesTest() {
-		assertDoesNotThrow(this::getUserCourseActivity);
+		assertDoesNotThrow(this::getUserActivity);
 	}
 
 	/**
@@ -52,21 +52,21 @@ class UserCourseActivityServiceImplTest extends PagingTester {
 	 * que no indica next.
 	 */
 	@SuppressWarnings("unchecked")
-	void getUserCourseActivity() throws JsonMappingException, JsonProcessingException {
-		Answer<?> mockedAnswer = buildPagedResponse(PAGE_OF_UCA_TYPE_REF, userCourseActivityPages);
-		Mockito.when(udemyClient.getUserCourseActivity(null)).thenAnswer(mockedAnswer);
-		Mockito.when(udemyClient.getUserCourseActivity(Mockito.any(MultiValueMap.class))).thenAnswer(mockedAnswer);
+	void getUserActivity() throws JsonMappingException, JsonProcessingException {
+		Answer<?> mockedAnswer = buildPagedResponse(PAGE_OF_UA_TYPE_REF, userActivityPages);
+		Mockito.when(udemyClient.getUserActivity(null)).thenAnswer(mockedAnswer);
+		Mockito.when(udemyClient.getUserActivity(Mockito.any(MultiValueMap.class))).thenAnswer(mockedAnswer);
 
-		Flux<UserCourseActivity> userCourseActivityFlux = new UserCourseActivityServiceImpl(udemyClient).getUserCourseActivity();
+		Flux<UserActivity> userActivityFlux = new UserActivityServiceImpl(udemyClient).getUserActivity();
 
-		assertEquals(userCourseActivityFlux.collectList().block().size(), calculatePagesContents(userCourseActivityPages));
+		assertEquals(userActivityFlux.collectList().block().size(), calculatePagesContents(userActivityPages));
 	}
 
 	private Integer calculatePagesContents(List<String> coursePages) {
 		try {
 			Integer result = 0;
 			for (String coursePage : coursePages) {
-				result += defaultObjectMapper.readValue(coursePage, PAGE_OF_UCA_TYPE_REF).getResults().size();
+				result += defaultObjectMapper.readValue(coursePage, PAGE_OF_UA_TYPE_REF).getResults().size();
 			}
 
 			return result;

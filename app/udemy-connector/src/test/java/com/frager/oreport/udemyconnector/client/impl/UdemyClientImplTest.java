@@ -40,6 +40,8 @@ class UdemyClientImplTest {
 	@Value("${user-course-activity.page.1.no-next}")
 	private String userCourseActivityPage1;
 	
+	@Value("${user-activity.page.1.no-next}")
+	private String userActivityPage1;
 
 	@Value("#{${test.udemy.courses.url.query-params}}")
 	private MultiValueMap<String, String> testCoursesUrlQueryParams;
@@ -52,12 +54,14 @@ class UdemyClientImplTest {
 	private WebClient singleCourseWebClient;
 	private WebClient coursePagesWebClient;
 	private WebClient userCourseAcitvityPagesWebClient;
+	private WebClient userAcitvityPagesWebClient;
 
 	@PostConstruct
 	private void postConstruct() {
 		singleCourseWebClient = WebClient.builder().exchangeFunction(getExchangeFunction(singleCourse)).build();
 		coursePagesWebClient = WebClient.builder().exchangeFunction(getExchangeFunction(coursesPage1)).build();
 		userCourseAcitvityPagesWebClient = WebClient.builder().exchangeFunction(getExchangeFunction(userCourseActivityPage1)).build();
+		userAcitvityPagesWebClient = WebClient.builder().exchangeFunction(getExchangeFunction(userActivityPage1)).build();
 	}
 
 	@Test
@@ -88,6 +92,12 @@ class UdemyClientImplTest {
 
 	@Test
 	void getUserCourseActivityTest() {
+		new UdemyClientImpl(userCourseAcitvityPagesWebClient).getUserCourseActivity(null)
+				.subscribe(page -> assertPagedUdemyObject(page, UserCourseActivity::getUserEmail));
+	}
+	
+	@Test
+	void getUserActivityTest() {
 		new UdemyClientImpl(userCourseAcitvityPagesWebClient).getUserCourseActivity(null)
 				.subscribe(page -> assertPagedUdemyObject(page, UserCourseActivity::getUserEmail));
 	}

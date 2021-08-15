@@ -20,6 +20,7 @@ import com.frager.oreport.udemyconnector.client.UdemyClient;
 import com.udemy.model.ListedCourse;
 import com.udemy.model.PageResponse;
 import com.udemy.model.SingleCourse;
+import com.udemy.model.UserActivity;
 import com.udemy.model.UserCourseActivity;
 
 import reactor.core.publisher.Mono;
@@ -33,6 +34,9 @@ public class UdemyClientImpl implements UdemyClient {
 	};
 
 	private static final ParameterizedTypeReference<PageResponse<UserCourseActivity>> PAGE_OF_UCA_TYPE_REF = new ParameterizedTypeReference<PageResponse<UserCourseActivity>>() {
+	};
+	
+	private static final ParameterizedTypeReference<PageResponse<UserActivity>> PAGE_OF_UA_TYPE_REF = new ParameterizedTypeReference<PageResponse<UserActivity>>() {
 	};
 
 	@Value("${udemy.course.url}")
@@ -52,6 +56,12 @@ public class UdemyClientImpl implements UdemyClient {
 
 	@Value("#{${udemy.user-course-activity.url.query-params}}")
 	private MultiValueMap<String, String> userCourseActivityUrlQueryParams;
+	
+	@Value("${udemy.user-activity.url}")
+	private String userActivityUrl;
+
+	@Value("#{${udemy.user-activity.url.query-params}}")
+	private MultiValueMap<String, String> userActivityUrlQueryParams;
 
 	private WebClient udemyWebClient;
 
@@ -101,5 +111,12 @@ public class UdemyClientImpl implements UdemyClient {
 		MultiValueMap<String, String> finalQueryParams = mixMaps(queryParams, userCourseActivityUrlQueryParams);
 		return udemyWebClient.get().uri(userCourseActivityUrl, uriF -> uriF.queryParams(finalQueryParams).build()).retrieve()
 				.bodyToMono(PAGE_OF_UCA_TYPE_REF);
+	}
+
+	@Override
+	public Mono<PageResponse<UserActivity>> getUserActivity(MultiValueMap<String, String> queryParams) {
+		MultiValueMap<String, String> finalQueryParams = mixMaps(queryParams, userActivityUrlQueryParams);
+		return udemyWebClient.get().uri(userActivityUrl, uriF -> uriF.queryParams(finalQueryParams).build()).retrieve()
+				.bodyToMono(PAGE_OF_UA_TYPE_REF);
 	}
 }

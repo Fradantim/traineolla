@@ -42,6 +42,7 @@ Valores por defecto (y ejemplos) en [application.properties](src/main/resources/
 | `api-docs.courses.description` | Documentacion de OpenApi. |
 | `api-docs.courses.id.description` | Documentacion de OpenApi. |
 | `api-docs.request.udemy.params.description` | Documentacion de OpenApi. |
+| `api-docs.user-activity.description` | Documentacion de OpenApi. |
 | `api-docs.user-course-activity.description` | Documentacion de OpenApi. |
 | `request.udemy.params.identifier` | Los request-param que empiecen con este valor serán incluidos directamente en la consulta a Udemy. |
 | `udemy.default-page-size` | Cantidad elementos por página retornados por cada consulta a Udemy. Udemy indica no superar 100 y recomienda utilizar 20. <br /> **IMPORTANTE**: Ver [Cuestiones de recursos](#cuestiones-de-recursos) |
@@ -49,8 +50,8 @@ Valores por defecto (y ejemplos) en [application.properties](src/main/resources/
 | `udemy.course.url.query-params` | Argumentos de busqueda para acotar resultados o especificar atributos a recuperar al consultar contra `udemy.course.url`. |
 | `udemy.courses.url` | Url de la lista de catalogo del portal de aprendizaje de Udemy. |
 | `udemy.courses.url.query-params` | Argumentos de busqueda para acotar resultados o especificar atributos a recuperar al consultar contra `udemy.courses.url`. <br /> **IMPORTANTE**: Ver [Cuestiones de recursos](#cuestiones-de-recursos) |
-| `udemy.user-activity.url` | **EN DESUSO** Url para actividad de usuarios del portal de aprendizaje de Udemy. |
-| `udemy.user-activity.url.query-params` | **EN DESUSO** Argumentos de busqueda para acotar resultados o especificar atributos a recuperar al consultar contra `udemy.user-activity.url`. |
+| `udemy.user-activity.url` | Url para actividad de usuarios del portal de aprendizaje de Udemy. |
+| `udemy.user-activity.url.query-params` | Argumentos de busqueda para acotar resultados o especificar atributos a recuperar al consultar contra `udemy.user-activity.url`. |
 | `udemy.user-course-activity.url` | Url para actividad de consumo de usuarios por curso del portal de aprendizaje de Udemy. |
 | `udemy.user-course-activity.url.query-params` | Argumentos de busqueda para acotar resultados o especificar atributos a recuperar al consultar contra `udemy.user-course-activity.url`. |
 | `udemy.user-progress.url` | **EN DESUSO** Url para actividad de progreso de usuarios por curso del portal de aprendizaje de Udemy. |
