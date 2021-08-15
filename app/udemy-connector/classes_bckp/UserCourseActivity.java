@@ -11,6 +11,9 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  */
 public class UserCourseActivity extends UserCourseAnalytic {
 
+	@JsonProperty("course_duration")
+	private Double courseDuration;
+
 	@JsonProperty("completion_ratio")
 	private Double completionRatio;
 
@@ -26,11 +29,29 @@ public class UserCourseActivity extends UserCourseAnalytic {
 	@JsonProperty("course_first_completion_date")
 	private OffsetDateTime courseFirstCompletionDate;
 
+	@JsonProperty("course_last_accessed_date")
+	private OffsetDateTime courselastAccessedDate;
+
+	@JsonProperty("is_assigned")
+	private String isAssigned;
+
+	@JsonProperty("assigned_by")
+	private String assignedBy;
+
 	@JsonProperty("num_video_consumed_minutes")
 	private Double numberOfVideoConsumedMinutes;
 
 	public UserCourseActivity() {
 		super();
+	}
+
+	/** Total duration of the video content of the course in minutes */
+	public Double getCourseDuration() {
+		return courseDuration;
+	}
+
+	public void setCourseDuration(Double courseDuration) {
+		this.courseDuration = courseDuration;
 	}
 
 	/**
@@ -79,6 +100,41 @@ public class UserCourseActivity extends UserCourseAnalytic {
 
 	public void setCourseFirstCompletionDate(OffsetDateTime courseFirstCompletionDate) {
 		this.courseFirstCompletionDate = courseFirstCompletionDate;
+	}
+
+	/** The date/time the user last accessed the course */
+	public OffsetDateTime getCourselastAccessedDate() {
+		return courselastAccessedDate;
+	}
+
+	public void setCourselastAccessedDate(OffsetDateTime courselastAccessedDate) {
+		this.courselastAccessedDate = courselastAccessedDate;
+	}
+
+	/**
+	 * "Yes" indicates that the user was assigned the course. "No" indicates the
+	 * user enrolled in the course themselves. Courses that were assigned before the
+	 * 19th March 2015 will not be recorded as assigned.
+	 */
+	public String getIsAssigned() {
+		return isAssigned;
+	}
+
+	public void setIsAssigned(String isAssigned) {
+		this.isAssigned = isAssigned;
+	}
+
+	/**
+	 * Provides the email address of the admin user who assigned the course to the
+	 * user, if it was Assigned. It will be empty if the user enrolled in the course
+	 * themselves.
+	 */
+	public String getAssignedBy() {
+		return assignedBy;
+	}
+
+	public void setAssignedBy(String assignedBy) {
+		this.assignedBy = assignedBy;
 	}
 
 	/**

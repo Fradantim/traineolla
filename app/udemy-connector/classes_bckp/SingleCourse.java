@@ -1,5 +1,9 @@
 package com.udemy.model;
 
+import java.util.List;
+
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 /**
  * POJO del endpoint <code>/courses/{course-id}</code> de Udemy. <br />
  * Otros elementos interesantes disponibles: <br />
@@ -20,7 +24,18 @@ package com.udemy.model;
  */
 public class SingleCourse extends Course {
 
+	@JsonProperty("visible_instructors")
+	private List<Instructor> visibleInstructors;
+
 	public SingleCourse() {
 		super();
+	}
+
+	public List<Instructor> getVisibleInstructors() {
+		return visibleInstructors;
+	}
+
+	public void setVisibleInstructors(List<Instructor> visibleInstructors) {
+		this.visibleInstructors = visibleInstructors;
 	}
 }
