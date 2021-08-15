@@ -3,7 +3,6 @@ package com.frager.oreport.udemyconnector.web.rest;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -22,21 +21,18 @@ import reactor.core.publisher.Mono;
 @RequestMapping("/courses")
 public class CourseResource extends UdemyResource {
 
-	@Value("${request.udemy.params.identifier}")
-	private String udemyRequestParamIdentifier;
-
 	@Autowired
 	private CourseService courseService;
 
 	@GetMapping("/{id}")
 	public Mono<Course> getById(@Parameter(description = "Id del curso a buscar") @PathVariable("id") Integer id,
-			@Parameter(description = "${api-docs.request.udemy.params.description}") @RequestParam(defaultValue = "{}") Map<String, String> requestParams) {
+			@Parameter(description = "${api-docs.courses.id.description}") @RequestParam(defaultValue = "{}") Map<String, String> requestParams) {
 		return courseService.getCourseById(id, getUdemySpecificRequestParams(requestParams));
 	}
 
 	@GetMapping(produces = MediaType.APPLICATION_NDJSON_VALUE)
 	public Flux<Course> getAll(
-			@Parameter(description = "${api-docs.request.udemy.params.description}") @RequestParam(defaultValue = "{}") Map<String, String> requestParams) {
+			@Parameter(description = "${api-docs.courses.description}") @RequestParam(defaultValue = "{}") Map<String, String> requestParams) {
 		return courseService.getCourses(getUdemySpecificRequestParams(requestParams));
 	}
 }

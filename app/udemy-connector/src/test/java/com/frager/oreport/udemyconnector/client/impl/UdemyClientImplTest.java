@@ -2,7 +2,8 @@ package com.frager.oreport.udemyconnector.client.impl;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+
+import java.util.function.Function;
 
 import javax.annotation.PostConstruct;
 
@@ -17,10 +18,11 @@ import org.springframework.web.reactive.function.client.ClientResponse;
 import org.springframework.web.reactive.function.client.ExchangeFunction;
 import org.springframework.web.reactive.function.client.WebClient;
 
-import com.frager.oreport.udemyconnector.client.UdemyClient;
-import com.udemy.model.ListedCourse;
+import com.udemy.model.Course;
 import com.udemy.model.PageResponse;
 import com.udemy.model.SingleCourse;
+import com.udemy.model.UdemyObject;
+import com.udemy.model.UserCourseActivity;
 
 import reactor.core.publisher.Mono;
 
@@ -34,6 +36,10 @@ class UdemyClientImplTest {
 
 	@Value("${courses.page.1}")
 	private String coursesPage1;
+	
+	@Value("${user-course-activity.page.1.no-next}")
+	private String userCourseActivityPage1;
+	
 
 	@Value("#{${test.udemy.courses.url.query-params}}")
 	private MultiValueMap<String, String> testCoursesUrlQueryParams;
@@ -45,11 +51,13 @@ class UdemyClientImplTest {
 
 	private WebClient singleCourseWebClient;
 	private WebClient coursePagesWebClient;
+	private WebClient userCourseAcitvityPagesWebClient;
 
 	@PostConstruct
 	private void postConstruct() {
 		singleCourseWebClient = WebClient.builder().exchangeFunction(getExchangeFunction(singleCourse)).build();
 		coursePagesWebClient = WebClient.builder().exchangeFunction(getExchangeFunction(coursesPage1)).build();
+		userCourseAcitvityPagesWebClient = WebClient.builder().exchangeFunction(getExchangeFunction(userCourseActivityPage1)).build();
 	}
 
 	@Test
@@ -63,38 +71,24 @@ class UdemyClientImplTest {
 		assertNotNull(course.getClazz());
 	}
 
-	@Test
-	void getCoursesTest() {
-		new UdemyClientImpl(coursePagesWebClient).getCourses(testCoursesUrlQueryParams)
-				.subscribe(this::assertPagedCourse);
-	}
-
-	void assertPagedCourse(PageResponse<ListedCourse> page) {
+	private <S extends UdemyObject> void assertPagedUdemyObject(PageResponse<S> page, Function<S, ? extends Object> nonNullSuplier) {
 		assertNotNull(page);
 		assertNotNull(page.getCount());
-		assertNotNull(page.getNext());
 		assertNotNull(page.getResults());
 		assertFalse(page.getResults().isEmpty());
 		assertNotNull(page.getResults().get(0));
-		assertNotNull(page.getResults().get(0).getId());
-		assertNotNull(page.getResults().get(0).getClazz());
+		assertNotNull(nonNullSuplier.apply(page.getResults().get(0)));
 	}
-
+	
 	@Test
-	void getUserActivityTest() {
-		UdemyClient uc = new UdemyClientImpl(null);
-		assertThrows(UnsupportedOperationException.class, () -> uc.getUserActivity(null));
+	void getCoursesTest() {
+		new UdemyClientImpl(coursePagesWebClient).getCourses(testCoursesUrlQueryParams)
+				.subscribe(page -> assertPagedUdemyObject(page, Course::getId));
 	}
 
 	@Test
 	void getUserCourseActivityTest() {
-		UdemyClient uc = new UdemyClientImpl(null);
-		assertThrows(UnsupportedOperationException.class, () -> uc.getUserCourseActivity(null));
-	}
-
-	@Test
-	void getUserProgressTest() {
-		UdemyClient uc = new UdemyClientImpl(null);
-		assertThrows(UnsupportedOperationException.class, () -> uc.getUserProgress(null));
+		new UdemyClientImpl(userCourseAcitvityPagesWebClient).getUserCourseActivity(null)
+				.subscribe(page -> assertPagedUdemyObject(page, UserCourseActivity::getUserEmail));
 	}
 }

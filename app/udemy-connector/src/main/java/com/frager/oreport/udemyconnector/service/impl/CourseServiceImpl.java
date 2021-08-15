@@ -10,7 +10,6 @@ import com.frager.oreport.udemyconnector.client.UdemyClient;
 import com.frager.oreport.udemyconnector.mapper.CourseMapper;
 import com.frager.oreport.udemyconnector.model.Course;
 import com.frager.oreport.udemyconnector.service.CourseService;
-import com.frager.oreport.udemyconnector.utils.URLUtils;
 import com.udemy.model.ListedCourse;
 import com.udemy.model.PageResponse;
 import com.udemy.model.SingleCourse;
@@ -19,7 +18,7 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 @Service
-public class CourseServiceImpl implements CourseService {
+public class CourseServiceImpl extends UdemyService implements CourseService {
 
 	private static final Logger logger = LoggerFactory.getLogger(CourseServiceImpl.class);
 
@@ -49,7 +48,7 @@ public class CourseServiceImpl implements CourseService {
 		Flux<Course> currentFlux = listedCoursePageMono.flatMapMany(page -> {
 			logger.debug("Transformando pagina de {} elementos", page.getCount());
 			return Flux.fromIterable(page.getResults()).map(CourseMapper::fromListedCourse)
-					.concatWith(getNextPageCourses(page.getNext()));
+					.concatWith(getNextPage(page.getNext(), this::getCourses));
 		});
 
 		if (logger.isDebugEnabled()) {
@@ -57,16 +56,5 @@ public class CourseServiceImpl implements CourseService {
 		}
 
 		return currentFlux;
-	}
-
-	private Flux<Course> getNextPageCourses(String nextPageUrl) {
-		MultiValueMap<String, String> nextPageInfo = URLUtils.getQueryParamsFromURL(nextPageUrl);
-
-		if (nextPageInfo != null && !nextPageInfo.isEmpty()) {
-			logger.debug("La consulta previa informa de una siguiente pagina: query-params:{}", nextPageInfo);
-			return getCourses(nextPageInfo);
-		}
-
-		return Flux.empty();
 	}
 }

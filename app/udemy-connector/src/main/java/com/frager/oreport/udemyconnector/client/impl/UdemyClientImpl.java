@@ -20,9 +20,7 @@ import com.frager.oreport.udemyconnector.client.UdemyClient;
 import com.udemy.model.ListedCourse;
 import com.udemy.model.PageResponse;
 import com.udemy.model.SingleCourse;
-import com.udemy.model.UserActivity;
 import com.udemy.model.UserCourseActivity;
-import com.udemy.model.UserProgress;
 
 import reactor.core.publisher.Mono;
 
@@ -32,6 +30,9 @@ public class UdemyClientImpl implements UdemyClient {
 	private static final Logger logger = LoggerFactory.getLogger(UdemyClientImpl.class);
 
 	private static final ParameterizedTypeReference<PageResponse<ListedCourse>> PAGE_OF_COURSE_TYPE_REF = new ParameterizedTypeReference<PageResponse<ListedCourse>>() {
+	};
+
+	private static final ParameterizedTypeReference<PageResponse<UserCourseActivity>> PAGE_OF_UCA_TYPE_REF = new ParameterizedTypeReference<PageResponse<UserCourseActivity>>() {
 	};
 
 	@Value("${udemy.course.url}")
@@ -46,23 +47,11 @@ public class UdemyClientImpl implements UdemyClient {
 	@Value("#{${udemy.courses.url.query-params}}")
 	private MultiValueMap<String, String> coursesUrlQueryParams;
 
-	@Value("${udemy.user-activity.url}")
-	private String userActivityUrl;
-
-	@Value("#{${udemy.user-activity.url.query-params}}")
-	private MultiValueMap<String, String> userActivityUrlQueryParams;
-
 	@Value("${udemy.user-course-activity.url}")
 	private String userCourseActivityUrl;
 
 	@Value("#{${udemy.user-course-activity.url.query-params}}")
 	private MultiValueMap<String, String> userCourseActivityUrlQueryParams;
-
-	@Value("${udemy.user-progress.url}")
-	private String userProgressUrl;
-
-	@Value("#{${udemy.user-progress.url.query-params}}")
-	private MultiValueMap<String, String> userProgressUrlQueryParams;
 
 	private WebClient udemyWebClient;
 
@@ -108,20 +97,9 @@ public class UdemyClientImpl implements UdemyClient {
 	}
 
 	@Override
-	public PageResponse<UserActivity> getUserActivity(MultiValueMap<String, String> queryParams) {
-		// use userActivityUrlQueryParams
-		throw new UnsupportedOperationException("Implementable plz n°1");
-	}
-
-	@Override
-	public PageResponse<UserCourseActivity> getUserCourseActivity(MultiValueMap<String, String> queryParams) {
-		// use userCourseActivityUrlQueryParams
-		throw new UnsupportedOperationException("Implementable plz n°2");
-	}
-
-	@Override
-	public PageResponse<UserProgress> getUserProgress(MultiValueMap<String, String> queryParams) {
-		// use userProgressUrlQueryParams
-		throw new UnsupportedOperationException("Implementable plz n°3");
+	public Mono<PageResponse<UserCourseActivity>> getUserCourseActivity(MultiValueMap<String, String> queryParams) {
+		MultiValueMap<String, String> finalQueryParams = mixMaps(queryParams, userCourseActivityUrlQueryParams);
+		return udemyWebClient.get().uri(userCourseActivityUrl, uriF -> uriF.queryParams(finalQueryParams).build()).retrieve()
+				.bodyToMono(PAGE_OF_UCA_TYPE_REF);
 	}
 }

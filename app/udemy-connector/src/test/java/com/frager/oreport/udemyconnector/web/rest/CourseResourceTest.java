@@ -31,7 +31,7 @@ import reactor.core.publisher.Mono;
 
 @Profile("CourseResourceTest")
 @TestConfiguration
-class ServiceTestConfiguration {
+class CourseServiceTestConfiguration {
 
 	@Value("${request.udemy.params.identifier}")
 	private String udemyRequestParamIdentifier;
@@ -41,7 +41,7 @@ class ServiceTestConfiguration {
 
 	@Primary
 	@Bean
-	public CourseService dosasd() {
+	public CourseService buildFakeService() {
 		return new CourseServiceImpl(null) {
 			@Override
 			public Mono<Course> getCourseById(Integer id, MultiValueMap<String, String> queryParams) {

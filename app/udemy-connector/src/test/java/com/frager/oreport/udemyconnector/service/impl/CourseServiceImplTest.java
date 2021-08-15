@@ -8,7 +8,6 @@ import java.util.List;
 
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
-import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -33,7 +32,7 @@ import reactor.core.publisher.Mono;
 @SpringBootTest
 @TestPropertySource("classpath:secrets.mock.properties")
 @TestPropertySource("classpath:test.mock.properties")
-class CourseServiceImplTest {
+class CourseServiceImplTest extends PagingTester {
 
 	private static final TypeReference<PageResponse<ListedCourse>> PAGE_OF_COURSE_TYPE_REF = new TypeReference<PageResponse<ListedCourse>>() {
 	};
@@ -78,6 +77,7 @@ class CourseServiceImplTest {
 	 */
 	@SuppressWarnings("unchecked")
 	void getCoursesOperation() throws JsonMappingException, JsonProcessingException {
+		Answer<?> mockedCoursePageAnswer = buildPagedResponse(PAGE_OF_COURSE_TYPE_REF, coursePages);
 		Mockito.when(udemyClient.getCourses(null)).thenAnswer(mockedCoursePageAnswer);
 		Mockito.when(udemyClient.getCourses(Mockito.any(MultiValueMap.class))).thenAnswer(mockedCoursePageAnswer);
 
@@ -85,26 +85,6 @@ class CourseServiceImplTest {
 
 		assertEquals(coursesFlux.collectList().block().size(), calculatePagesContents(coursePages));
 	}
-
-	private Answer<Mono<PageResponse<ListedCourse>>> mockedCoursePageAnswer = new Answer<Mono<PageResponse<ListedCourse>>>() {
-		@SuppressWarnings("unchecked")
-		public Mono<PageResponse<ListedCourse>> answer(InvocationOnMock invocation) {
-			Integer thePageToReturn = 0;
-			Object[] args = invocation.getArguments();
-			if (args.length > 0 && args[0] != null && args[0] instanceof MultiValueMap) {
-				MultiValueMap<String, String> paramsMap = (MultiValueMap<String, String>) args[0];
-				if (paramsMap.containsKey("page") && !paramsMap.get("page").isEmpty()) {
-					thePageToReturn = Integer.parseInt(paramsMap.get("page").get(0)) - 1;
-				}
-			}
-			try {
-				return Mono
-						.just(defaultObjectMapper.readValue(coursePages.get(thePageToReturn), PAGE_OF_COURSE_TYPE_REF));
-			} catch (JsonProcessingException e) {
-				throw new RuntimeException("Error al serializar JSON", e);
-			}
-		}
-	};
 
 	private Integer calculatePagesContents(List<String> coursePages) {
 		try {
