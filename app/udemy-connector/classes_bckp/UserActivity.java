@@ -1,6 +1,5 @@
 package com.udemy.model;
 
-import java.time.OffsetDateTime;
 import java.time.LocalDate;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -11,9 +10,6 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  * Udemy.
  */
 public class UserActivity extends UserAnalytic {
-
-	@JsonProperty("report_date")
-	private OffsetDateTime reportDate;
 
 	@JsonProperty("user_joined_date")
 	private LocalDate joinDate;
@@ -44,14 +40,6 @@ public class UserActivity extends UserAnalytic {
 
 	public UserActivity() {
 		super();
-	}
-
-	public OffsetDateTime getReportDate() {
-		return reportDate;
-	}
-
-	public void setReportDate(OffsetDateTime reportDate) {
-		this.reportDate = reportDate;
 	}
 
 	/** This is the date the user joined the portal */
