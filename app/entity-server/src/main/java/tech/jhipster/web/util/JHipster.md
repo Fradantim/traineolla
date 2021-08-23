@@ -1,1 +1,0 @@
-Estas clases fueron tomadas directamente del package [tech.jhipster.web.util de JHipster 7.1.0](https://github.com/jhipster/jhipster-bom/blob/0d188b7a3d911ba4a4c272ca1acd271ec575569b/jhipster-framework/src/main/java/tech/jhipster/web/util).
