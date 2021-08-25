@@ -54,9 +54,7 @@ public class CourseResource {
 			throw new BadRequestException("Un nuevo curso no puede tener id de udemy nulo.");
 		}
 
-		return courseService.save(course).map(result -> {
-			return ResponseEntityUtil.created(result, PATH, result.getId());
-		});
+		return courseService.save(course).map(result -> ResponseEntityUtil.created(result, PATH, result.getId()));
 	}
 
 	@PutMapping("/{id}")
@@ -83,10 +81,9 @@ public class CourseResource {
 	public Mono<ResponseEntity<Mono<List<Course>>>> getAllCourses(@Parameter(hidden=true) Pageable pageable) {
 		logger.debug("REST request para consultar todos los cursos como lista");
 
-		return getAllCourseAsStream(pageable).map(responeSentity -> {
-			return new ResponseEntity<>(responeSentity.getBody().collectList(), responeSentity.getHeaders(),
-					responeSentity.getStatusCode());
-		});
+		return getAllCourseAsStream(pageable)
+				.map(responeSentity -> new ResponseEntity<>(responeSentity.getBody().collectList(),
+						responeSentity.getHeaders(), responeSentity.getStatusCode()));
 	}
 
 	@PageableAsQueryParam

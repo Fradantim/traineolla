@@ -28,7 +28,7 @@ public class ResponseEntityUtil {
 	public static <S> Mono<ResponseEntity<Flux<S>>> okPagedStream(Pageable pageable, Mono<Long> countPublisher,
 			Function<Pageable, Flux<S>> pagedElementsPublisher) {
 		return countPublisher.map(total -> new PageImpl<>(Collections.emptyList(), pageable, total))
-				.flatMap(page -> PaginationUtil.generatePaginationHttpHeadersInReactiveWebContext(page))
+				.flatMap(PaginationUtil::generatePaginationHttpHeadersInReactiveWebContext)
 				.map(headers -> ResponseEntity.ok().headers(headers).body(pagedElementsPublisher.apply(pageable)));
 	}
 

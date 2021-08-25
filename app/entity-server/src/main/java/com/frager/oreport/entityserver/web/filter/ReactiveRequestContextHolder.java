@@ -13,9 +13,11 @@ import reactor.core.publisher.Mono;
 public class ReactiveRequestContextHolder {
 	static final Class<ServerHttpRequest> CONTEXT_KEY = ServerHttpRequest.class;
 
-	public static Mono<ServerHttpRequest> getRequest() {
-		return Mono.deferContextual(Mono::just).map(ctx -> ctx.get(CONTEXT_KEY));
-		// return Mono.subscriberContext().map(ctx -> ctx.get(CONTEXT_KEY));
+	private ReactiveRequestContextHolder() {
+		super();
 	}
 
+	public static Mono<ServerHttpRequest> getRequest() {
+		return Mono.deferContextual(Mono::just).map(ctx -> ctx.get(CONTEXT_KEY));
+	}
 }
