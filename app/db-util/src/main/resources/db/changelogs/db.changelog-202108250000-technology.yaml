@@ -1,0 +1,52 @@
+databaseChangeLog:
+- changeSet:
+    id: 202108250000-technology-01-create-technology
+    author: oreport.db-util
+    changes:
+    - createTable:
+        tableName: TECHNOLOGY
+        columns:
+        - column:
+            autoIncrement: true
+            constraints:
+                primaryKey: true
+                primaryKeyName: TECHNOLOGY_PK
+            name: ID
+            type: BIGINT
+        - column:
+            constraints:
+                unique: true
+                nullable: false
+            name: NAME
+            type: VARCHAR(255)
+- changeSet:
+    id: 202108250000-technology-02-create-technology-idx
+    author: oreport.db-util
+    changes:
+    - createIndex:
+        tableName: TECHNOLOGY
+        columns:
+        - column:
+            name: NAME
+        unique:  true
+        indexName: TECHNOLOGY_IDX_NAME
+- changeSet:
+    id: 202108250000-technology-03-alter-account
+    author: oreport.db-util
+    changes:
+    - addColumn:
+        tableName: ACCOUNT
+        columns:
+        - column:
+            name: TECHNOLOGY_ID
+            type: BIGINT
+- changeSet:
+    id: 202108250000-technology-03-alter-learning-path
+    author: oreport.db-util
+    changes:
+    - addColumn:
+        tableName: LEARNING_PATH
+        columns:
+        - column:
+            name: TECHNOLOGY_ID
+            type: BIGINT
