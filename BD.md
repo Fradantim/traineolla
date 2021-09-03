@@ -4,7 +4,7 @@
   - [DIAGRAMA](#diagrama)
   - [DEFINICIONES](#definiciones)
     - [ACCOUNT](#account)
-    - [ACCOUNT_COURSE_SNAPSHOT *~pendiente de crear~*](#account_course_snapshot-pendiente-de-crear)
+    - [ACCOUNT_COURSE_SNAPSHOT *pendiente de crear*](#account_course_snapshot-pendiente-de-crear)
     - [ACCOUNT_LEARNING_PATH](#account_learning_path)
     - [COURSE](#course)
     - [COURSE_LEARNING_PATH](#course_learning_path)
@@ -37,7 +37,7 @@
 | LEVEL | INT | - | INDEX |
 | TECHNOLOGY_ID | BIGINT | - | INDEX, TECHNOLOGY -> ID |
 
-### ACCOUNT_COURSE_SNAPSHOT *~pendiente de crear~*
+### ACCOUNT_COURSE_SNAPSHOT *pendiente de crear*
 
 | Columna | Tipo de dato | Constraints | Referencias |
 | - | - | - | - | 
