@@ -4,6 +4,7 @@
   - [DIAGRAMA](#diagrama)
   - [DEFINICIONES](#definiciones)
     - [ACCOUNT](#account)
+    - [ACCOUNT_COURSE_SNAPSHOT *~pendiente de crear~*](#account_course_snapshot-pendiente-de-crear)
     - [ACCOUNT_LEARNING_PATH](#account_learning_path)
     - [COURSE](#course)
     - [COURSE_LEARNING_PATH](#course_learning_path)
@@ -13,11 +14,13 @@
 ## DIAGRAMA
 
 ```
-[TECHNOLOGY]-1-<>-N-[LEARNING_PATH]-1-<>-N-[COURSE_LEARNING_PATH]-N-<>-1-[COURSE]
-          |                     |
- ´-N-<>-1-´            ´-N-<>-1-´
- |                     |
-[ACCOUNT]-1-<>-N-[ACCOUNT_LEARNING_PATH]
+[TECHNOLOGY]-1-<>-N-[LEARNING_PATH]-1-<>-N-[COURSE_LEARNING_PATH]
+          |                     |                       |
+ ´-N-<>-1-´            ´-N-<>-1-´              ´-1-<>-N-´
+ |                     |                       |
+[ACCOUNT]-1-<>-N-[ACCOUNT_LEARNING_PATH]    [COURSE]
+   |                                          |
+   `-1-<>-N-[ACCOUNT_COURSE_SNAPSHOT]-N-<>-1--´
 ```
 
 ## DEFINICIONES
@@ -33,6 +36,21 @@
 | PEOPLE_LEAD_EMAIL | VARCHAR(255) | - | - |
 | LEVEL | INT | - | INDEX |
 | TECHNOLOGY_ID | BIGINT | - | INDEX, TECHNOLOGY -> ID |
+
+### ACCOUNT_COURSE_SNAPSHOT *~pendiente de crear~*
+
+| Columna | Tipo de dato | Constraints | Referencias |
+| - | - | - | - | 
+| ACCOUNT_ID | BIGINT | - | PK |
+| COURSE_ID | BIGINT | - | PK |
+| SNAPSHOT_DATETIME | DATETIME | - | PK |
+| COURSE_DURATION | INT | - | - |
+| COMPLETION_RATIO | INT | - | - |
+| NUM_VIDEO_CONSUMED_MINUTES | INT | - | - |
+| COURSE_ENROLL_DATE | DATETIME | - | - |
+| COURSE_START_DATE | DATETIME | - | - |
+| COURSE_FIRST_COMPLETION_DATE | DATETIME | - | - |
+| COURSE_COMPLETION_DATE | DATETIME | - | - |
 
 ### ACCOUNT_LEARNING_PATH
 
