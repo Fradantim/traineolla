@@ -17,8 +17,6 @@ import com.frager.oreport.mailserver.model.Mail;
 import com.frager.oreport.mailserver.model.SendStatus;
 import com.frager.oreport.mailserver.service.MailService;
 
-import reactor.core.publisher.Mono;
-
 @Service
 public class MailServiceImpl implements MailService {
 
@@ -34,11 +32,7 @@ public class MailServiceImpl implements MailService {
 	}
 
 	@Override
-	public Mono<Mail> send(Mail mail) {
-		return Mono.fromCallable(() -> sendMailOperation(mail));
-	}
-
-	private Mail sendMailOperation(Mail mail) {
+	public Mail send(Mail mail) {
 		try {
 			if (logger.isDebugEnabled())
 				logger.debug("Enviando correo a {}.", Arrays.toString(mail.getTo()));

@@ -22,6 +22,6 @@ public class MailResource {
 	@Operation(description="${api-docs.request.mail.description}")
 	@PostMapping()
 	public Mono<Mail> send(@RequestBody Mail mail) {
-		return mailService.send(mail);
+		return Mono.fromCallable(() -> mailService.send(mail));
 	}
 }
