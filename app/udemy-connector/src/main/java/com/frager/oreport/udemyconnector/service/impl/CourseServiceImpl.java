@@ -33,29 +33,19 @@ public class CourseServiceImpl extends UdemyService implements CourseService {
 
 	@Override
 	public Mono<Course> getCourseById(Integer id, MultiValueMap<String, String> queryParams) {
-		return udemyClient.getCourseById(id, queryParams).map(this::foolishMapper);
-	}
-
-	@Override
-	public Flux<Course> getCourses() {
-		return getCourses(null);
+		return udemyClient.getCourseById(id, queryParams).map(c -> (Course) c);
 	}
 
 	@Override
 	public Flux<Course> getCourses(MultiValueMap<String, String> queryParams) {
 		Mono<PageResponse<ListedCourse>> listedCoursePageMono = udemyClient.getCourses(queryParams);
 		Flux<Course> currentFlux = listedCoursePageMono.flatMapMany(page -> Flux.fromIterable(page.getResults())
-				.map(this::foolishMapper).concatWith(getNextPage(page.getNext(), this::getCourses)));
+				.map(c -> (Course) c).concatWith(getNextPage(page.getNext(), this::getCourses)));
 
 		if (logger.isDebugEnabled()) {
 			currentFlux.log();
 		}
 
 		return currentFlux;
-	}
-
-	/** Es un poco tonto, pero sirve para up-castear a {@link Course} */
-	private Course foolishMapper(Course c) {
-		return c;
 	}
 }
