@@ -13,8 +13,6 @@ public interface CourseService {
 	public Mono<Course> getCourseById(Integer id);
 
 	public Mono<Course> getCourseById(Integer id, @Nullable MultiValueMap<String, String> queryParams);
-
-	public Flux<Course> getCourses();
 	
 	public Flux<Course> getCourses(@Nullable  MultiValueMap<String, String> queryParams);
 }
