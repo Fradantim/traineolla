@@ -15,8 +15,6 @@ import org.springframework.test.context.TestPropertySource;
 import com.frager.oreport.mailserver.model.Mail;
 import com.frager.oreport.mailserver.model.Status;
 
-import reactor.core.publisher.Mono;
-
 @SpringBootTest
 @TestPropertySource("classpath:secrets.mock.properties")
 class MailServiceImplTest {
@@ -42,8 +40,7 @@ class MailServiceImplTest {
 		
 		Mockito.when(javaMailSender.createMimeMessage()).thenReturn(mimeMessageExample);
 		
-		Mono<Mail> returnedMailMono = new MailServiceImpl(javaMailSender, "slim@shady.com").send(originalMail);
-		Mail returnedMail = returnedMailMono.block();
+		Mail returnedMail = new MailServiceImpl(javaMailSender, "slim@shady.com").send(originalMail);
 
 		assertNotNull(returnedMail);
 		assertNotNull(returnedMail.getSendStatus());
@@ -59,8 +56,7 @@ class MailServiceImplTest {
 				.send(Mockito.any(MimeMessage.class));
 
 		Mail originalMail = new Mail();
-		Mono<Mail> returnedMailMono = new MailServiceImpl(javaMailSender, "slim@shady.com").send(originalMail);
-		Mail returnedMail = returnedMailMono.block();
+		Mail returnedMail = new MailServiceImpl(javaMailSender, "slim@shady.com").send(originalMail);
 
 		assertNotNull(returnedMail);
 		assertNotNull(returnedMail.getSendStatus());

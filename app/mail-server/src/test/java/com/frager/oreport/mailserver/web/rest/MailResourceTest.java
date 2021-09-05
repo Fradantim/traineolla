@@ -32,9 +32,9 @@ class ServiceTestConfiguration {
 	public MailService myMailServer() {
 		return new MailServiceImpl(null, null) {
 			@Override
-			public Mono<Mail> send(Mail mail) {
+			public Mail send(Mail mail) {
 				mail.setSendStatus(SendStatus.ok());
-				return Mono.just(mail);
+				return mail;
 			}
 		};
 	}
