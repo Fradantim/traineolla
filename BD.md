@@ -129,6 +129,10 @@ Tabla que refiere a las cuentas que consumen los cursos.
 | DESCRIPTION | VARCHAR(1023) | - | - |
 | LEVEL | INT | - | - |
 | TECHNOLOGY_ID | BIGINT | - | FK: TECHNOLOGY->ID |
+| ESTIMATED_CONTENT_LENGTH | INT | - | - |
+| NUM_LECTURES | INT | - | - |
+| NUM_QUIZZES | INT | - | - |
+| NUM_PRACTICE_TESTS | INT | - | - |
 | EXPECTED_SCORE | INT | - | - |
 
 ## RANKING
