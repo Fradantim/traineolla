@@ -12,11 +12,13 @@
 
 ## DIAGRAMA DE SECUENCIA
 ```
-⏰ -> [ACCOUNT_STATUS]
-
 ⏰ -> [ACCOUNT_COURSE_ACTIVITY] -> [UNKNOWN_ACCOUNTS]
        |
        `-> [COURSE_UPDATE] -> [LEARNING_PATH_UPDATE] -> [RANKING_UPDATE]
+
+[RANKING_UPDATE] -> -\
+                      |- -> [ACCOUNT_STATUS]
+⏰ -> ---------------/
 ```
 
 ## DEFINICIONES
@@ -36,7 +38,7 @@ Actualiza la actividad de los usuarios en relación a los cursos.
   - Query Udemy User Course Activity con args from_date, to_date
 - **OUTPUT**
   - Por cada resultado de Udemy:
-    - `SELECT * FROM ACCOUNT_COURSE_SNAPSHOT WHERE ACCOUNT_EMAIL/ACCOUNT_EID = {} AND COURSE_UDEMY_ID = {} AND SNAPSHOT_DATE = (SELECT MAX(SNAPSHOT_DATE) FROM ACCOUNT_COURSE_SNAPSHOT WHERE ACCOUNT_EMAIL/ACCOUNT_EID = {} AND COURSE_UDEMY_ID = {})` *(consulta indexada)*
+    - `SELECT * FROM ACCOUNT_COURSE_SNAPSHOT WHERE ACCOUNT_EID = {} AND UDEMY_COURSE_ID = {} AND SNAPSHOT_DATE = (SELECT MAX(SNAPSHOT_DATE) FROM ACCOUNT_COURSE_SNAPSHOT WHERE ACCOUNT_EID = {} AND UDEMY_COURSE_ID = {})` *(consulta indexada)*
   - ¿Existe el resultado de la consulta?
     - SI -> ¿El dato de Udemy tiene info distinta al resultado de la consulta?
       - SI -> Agrego nuevo elemento
@@ -45,9 +47,6 @@ Actualiza la actividad de los usuarios en relación a los cursos.
 - **NOTAS**
   - `UDEMY_PAGE_SIZE` = 100 (o lo máximo que permita Udemy, actualmente 100)
   - `TRANSACTION_SIZE` = `UDEMY_PAGE_SIZE` * 10
-  - **NECESITA CAMBIOS EN MODELO DE BBDD**
-      - ❓ ¿Agregar a `ACCOUNT_COURSE_SNAPSHOT` columna `COURSE_UDEMY_ID` hacerlo transitivo al ID de la entidad de negocio?
-      - ❓ ¿Agregar a `ACCOUNT_COURSE_SNAPSHOT` columna `ACCOUNT_EMAIL` o `ACCOUNT_EID`?
   - ⚠️ Para dar una buena visibilidad del pasado necesita una consulta inicial "desde el principio de los tiempos", caso contrario de aca no se recupera cuantos minutos dedicó la cuenta al curso.
 
 ### ACCOUNT_STATUS
@@ -55,7 +54,7 @@ Actualiza la actividad de los usuarios en relación a los cursos.
 Informa a las cuentas del avance de sus capacitaciones.
 
 - **PERIODICIDAD**
-  - Determinado por **INPUT**
+  - Determinado por **INPUT** y posterior a [RANKING_UPDATE](#ranking_update)
 - **INPUT** from_date (DATE), to_date (DATE)
   - (TODAY - 7, TODAY) correr una vez por semana
   - (PRIMERO DEL MES PASADO, PRIMERO DEL MES ACTUAL) correr mensualmente **(ideal)**
@@ -73,9 +72,6 @@ Informa a las cuentas del avance de sus capacitaciones.
   - ¿Ya conozco el curso con dicho UDEMY_ID?
     - SI -> `no-op`
     - NO -> `INSERT INTO COURSE VALUES (...)`
-- **NOTAS**
-  - Pendiente de la pregunta 
-    - ¿Agregar a `ACCOUNT_COURSE_SNAPSHOT` columna `COURSE_UDEMY_ID` hacerlo transitivo al ID de la entidad de negocio?
 
 ### COURSE_UPDATE
 
@@ -84,10 +80,8 @@ Renueva la información remota de los cursos.
 - **PERIODICIDAD**
   - Despues de [ACCOUNT_COURSE_ACTIVITY](#account_course_activity)
 - **INPUT** (una de estas)
-  - `SELECT DISTINCT COURSE_UDEMY_ID FROM ACCOUNT_COURSE_SNAPSHOT` 
-    - Idealmente esta, dado que nos puede alimentar de nuevos cursos no conocidos que se están consumiendo.
-  - `SELECT UDEMY_ID FROM COURSE WHERE ID IN (SELECT DISTINCT COURSE_ID FROM ACCOUNT_COURSE_SNAPSHOT)`
-    - Nos alimenta solamente de cursos conocidos que están siendo consumidos.
+  - `SELECT DISTINCT UDEMY_COURSE_ID FROM ACCOUNT_COURSE_SNAPSHOT` 
+    - Nos alimenta de nuevos cursos no conocidos que se están consumiendo.
   - `SELECT UDEMY_ID FROM COURSE`
     - Nos alimenta solamente de cursos conocidos.
 - **OPERACION**
@@ -104,9 +98,6 @@ Renueva la información remota de los cursos.
       - ¿Se puede conservar el resultado de la consulta anterior?
     - SI -> `no-op`
     - NO -> `INSERT INTO COURSE VALUES (...)`
-- **NOTAS**
-  - Pendiente de la pregunta 
-    - ¿Agregar a `ACCOUNT_COURSE_SNAPSHOT` columna `COURSE_UDEMY_ID` hacerlo transitivo al ID de la entidad de negocio?
 
 ### LEARNING_PATH_UPDATE
 
@@ -118,8 +109,8 @@ Actualiza la información de los learning path en base a las actualizaciones de 
   - `SELECT * FROM LEARNING_PATH`
 - **OPERACION**
   ``` sql
-  UPDATE LEARNING_PATH SET SCORE = (
-    SELECT SUM(SCORE) from COURSE WHERE ID IN (
+  UPDATE LEARNING_PATH SET EXPECTED_SCORE = (
+    SELECT SUM(EXPECTED_SCORE) from COURSE WHERE ID IN (
       SELECT COURSE_ID FROM COURSE_LEARNING_PATH WHERE LEARNING_PATH_ID = {}
     )
   )
@@ -146,26 +137,30 @@ Actualiza la información de los learning path en base a las actualizaciones de 
   - Recupero el snapshot más reciente de cada curso para ese usuario y learning path (ACCOUNT_COURSE_SNAPSHOT puede tener info de cursos que no están en el LP actual)
   ``` sql
   SELECT * FROM ACCOUNT_COURSE_SNAPSHOT acs 
-  WHERE ACCOUNT_EMAIL/ACCOUNT_EID = {}
-  AND COURSE_ID IN (
-    SELECT COURSE_ID FROM COURSE_LEARNING_PATH WHERE LEARNING_PATH_ID = {}
+  WHERE ACCOUNT_EID = {}
+  AND UDEMY_COURSE_ID IN (
+    SELECT UDEMY_ID FROM COURSE WHERE ID IN (
+      SELECT COURSE_ID FROM COURSE_LEARNING_PATH WHERE LEARNING_PATH_ID = {}
+    )
   )
   AND SNAPSHOT_DATE = (
     SELECT MAX(SNAPSHOT_DATE) FROM ACCOUNT_COURSE_SNAPSHOT sub
-    WHERE sub.ACCOUNT_EMAIL/ACCOUNT_EID = acs.ACCOUNT_EMAIL/ACCOUNT_EID
-    AND sub.COURSE_ID = acs.COURSE_ID
+    WHERE sub.ACCOUNT_EID = acs/ACCOUNT_EID
+    AND sub.UDEMY_COURSE_ID = acs.UDEMY_COURSE_ID
   )
   -- consultas indexadas
-  -- ACCOUNT_EMAIL/ACCOUNT_EID -> COURSE_ID
+  -- ACCOUNT_EID -> COURSE_ID
   ``` 
   - Calcular score y % de completado del LP.
 - **OUTPUT**
   - `INSERT INTO RANKING VALUES (...)`
 - **AFTER**
+  ``` sql
+  UPDATE RANKING SET 
+    SCORE_RANK=(SELECT DENSE_RANK() OVER(ORDER BY SCORE DESC) FROM RANKING),
+    COMPLETION_RANK=(SELECT DENSE_RANK() OVER(ORDER BY COMPLETION_RATIO DESC) FROM RANKING)
+  ```
   - Commitear transacción
-- **NOTAS**
-  - **NECESITA CAMBIOS EN MODELO DE BBDD**
-      - ❓ ¿Agregar a tabla `RANKING`?
 
 ### UNKNOWN_ACCOUNTS
 
@@ -176,7 +171,7 @@ Indica cuentas no conocidas que estén utilizando las utilidades de Udemy.
 - **INPUT**
   - N/A
 - **OPERACION**
-  - `SELECT ACCOUNT_EMAIL/ACCOUNT_EID FROM ACCOUNT_COURSE_SNAPSHOT WHERE ACCOUNT_EMAIL NOT IN (SELECT EMAIL/ENTERPISE_ID FROM ACCOUNT)` 
+  - `SELECT ACCOUNT_EID FROM ACCOUNT_COURSE_SNAPSHOT WHERE ACCOUNT_EID NOT IN (SELECT ENTERPISE_ID FROM ACCOUNT)` 
 - **OUTPUT**
   - Colleccionar los resultados y enviar correo con la información.
     - El correo puede ilustrarse más con la información de qué actividad tuvieron esos usuarios.
@@ -185,5 +180,3 @@ Indica cuentas no conocidas que estén utilizando las utilidades de Udemy.
     - Eliminar la info de cuentas desconocidas (para que deje de aparecer en correos).
 - **NOTAS**
   - ⚠️ Requiere conocer todos las cuentas del dominio.
-  - Pendiente de la pregunta 
-    - ¿Agregar a `ACCOUNT_COURSE_SNAPSHOT` columna `ACCOUNT_EMAIL` o `ACCOUNT_EID`?
