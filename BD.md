@@ -4,7 +4,6 @@
 - [DIAGRAMA](#diagrama)
 - [DEFINICIONES](#definiciones)
   - [ACCOUNT](#account)
-    - [TABLA](#tabla)
     - [INDICES](#indices)
   - [ACCOUNT_COURSE_SNAPSHOT](#account_course_snapshot)
     - [INDICES](#indices-1)
@@ -34,8 +33,6 @@
 ## ACCOUNT
 
 Tabla que refiere a las cuentas que consumen los cursos.
-
-### TABLA
 
 | Columna | Tipo de dato | Constraints | Referencias |
 | - | - | - | - | 
