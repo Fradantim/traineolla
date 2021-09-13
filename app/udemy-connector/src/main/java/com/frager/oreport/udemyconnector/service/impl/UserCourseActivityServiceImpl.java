@@ -32,7 +32,8 @@ public class UserCourseActivityServiceImpl extends UdemyService implements UserC
 
 	@Override
 	public Flux<UserCourseActivity> getUserCourseActivity(MultiValueMap<String, String> queryParams) {
-		Mono<PageResponse<UserCourseActivity>> userCourseActivityPageMono = udemyClient.getUserCourseActivity(queryParams);
+		Mono<PageResponse<UserCourseActivity>> userCourseActivityPageMono = udemyClient
+				.getUserCourseActivity(queryParams);
 		Flux<UserCourseActivity> currentFlux = userCourseActivityPageMono.flatMapMany(page -> {
 			logger.debug("Transformando pagina de {} elementos", page.getCount());
 			return Flux.fromIterable(page.getResults())
@@ -44,5 +45,10 @@ public class UserCourseActivityServiceImpl extends UdemyService implements UserC
 		}
 
 		return currentFlux;
+	}
+
+	@Override
+	public Mono<PageResponse<UserCourseActivity>> getUserCourseActivityPage(MultiValueMap<String, String> queryParams) {
+		return udemyClient.getUserCourseActivity(queryParams).flatMap(this::translateUrls);
 	}
 }

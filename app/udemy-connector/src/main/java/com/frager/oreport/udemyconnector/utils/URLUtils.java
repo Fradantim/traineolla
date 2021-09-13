@@ -14,6 +14,12 @@ import org.slf4j.LoggerFactory;
 import org.springframework.lang.Nullable;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
+import org.springframework.web.util.UriComponentsBuilder;
+
+import com.frager.oreport.udemyconnector.web.filter.ReactiveRequestContextFilter;
+import com.frager.oreport.udemyconnector.web.filter.ReactiveRequestContextHolder;
+
+import reactor.core.publisher.Mono;
 
 public class URLUtils {
 
@@ -60,5 +66,36 @@ public class URLUtils {
 		}
 
 		return queryParams;
+	}
+
+	
+	/**
+	 * Retorna una url basada en la misma url con la que se ingreso al servicio y
+	 * con los query args ingresados por parametro. <br/>
+	 * <b>IMPORTANTE</b>: Este metodo solo funciona en contexto web-reactivos que
+	 * hayan pasado por el filtro {@link ReactiveRequestContextFilter}.
+	 */
+	public static Mono<String> getURLFromQueryParams(String preAppend, String url){
+		return getURLFromQueryParams(preAppend, getQueryParamsFromURL(url));
+	}
+	
+	/**
+	 * Retorna una url basada en la misma url con la que se ingreso al servicio y
+	 * con los query args ingresados por parametro. <br/>
+	 * <b>IMPORTANTE</b>: Este metodo solo funciona en contexto web-reactivos que
+	 * hayan pasado por el filtro {@link ReactiveRequestContextFilter}.
+	 */
+	public static Mono<String> getURLFromQueryParams(String preAppend,
+			@Nullable MultiValueMap<String, String> queryArgs) {
+		return ReactiveRequestContextHolder.getRequest().map(serverHttpRequest -> {
+			String url = serverHttpRequest.getURI().toString().split("\\?")[0];
+			if (queryArgs == null || queryArgs.isEmpty())
+				return url;
+
+			MultiValueMap<String, String> newQueryArgs = new LinkedMultiValueMap<>();
+			queryArgs.forEach((k, v) -> newQueryArgs.put(preAppend + k, v));
+
+			return UriComponentsBuilder.fromUriString(url).queryParams(newQueryArgs).toUriString();
+		});
 	}
 }

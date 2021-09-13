@@ -8,8 +8,15 @@ import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.ResponseEntity;
 import org.springframework.util.MultiValueMap;
 import org.springframework.util.MultiValueMapAdapter;
+
+import com.frager.oreport.udemyconnector.web.util.PaginationUtil;
+import com.udemy.model.PageResponse;
+import com.udemy.model.UserCourseActivity;
+
+import reactor.core.publisher.Mono;
 
 public class UdemyResource {
 
@@ -45,5 +52,10 @@ public class UdemyResource {
 		MultiValueMap<String, T> udemyRequestParamsAsMultiValueMap = new MultiValueMapAdapter<>(udemyRequestParams);
 		logger.debug("Argumentos especificos de Udemy: {}", udemyRequestParamsAsMultiValueMap);
 		return udemyRequestParamsAsMultiValueMap;
+	}
+
+	protected <S> Mono<ResponseEntity<List<S>>> buildPagedResponse(PageResponse<S> page) {
+		return PaginationUtil.generatePaginationHttpHeadersInReactiveWebContext(udemyRequestParamIdentifier, page)
+				.map(headers -> ResponseEntity.ok().headers(headers).body(page.getResults()));
 	}
 }
