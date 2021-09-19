@@ -13,6 +13,7 @@ import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Primary;
 import org.springframework.context.annotation.Profile;
+import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.util.LinkedMultiValueMap;
@@ -58,7 +59,8 @@ class UserCourseActivityResourceTest {
 	@Test
 	void getCoursesWithNoExtraParamsTest() {
 		Flux<UserCourseActivity> courseFlux = WebClient.create().get()
-				.uri("http://localhost:" + port + "/user-course-activity/").retrieve()
+				.uri("http://localhost:" + port + "/user-course-activity/").accept(MediaType.APPLICATION_NDJSON)
+				.retrieve()
 				.bodyToFlux(UserCourseActivity.class);
 
 		List<UserCourseActivity> activities = courseFlux.collect(Collectors.toList()).block();
@@ -71,6 +73,7 @@ class UserCourseActivityResourceTest {
 		Flux<UserCourseActivity> courseFlux = WebClient.create().get()
 				.uri("http://localhost:" + port + "/user-course-activity/",
 						uriF -> uriF.queryParams(new LinkedMultiValueMap<>()).build())
+						.accept(MediaType.APPLICATION_NDJSON)
 				.retrieve().bodyToFlux(UserCourseActivity.class);
 
 		List<UserCourseActivity> activities = courseFlux.collect(Collectors.toList()).block();

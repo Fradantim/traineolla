@@ -1,6 +1,5 @@
 package com.frager.oreport.udemyconnector.service.impl;
 
-import java.util.Optional;
 import java.util.function.Function;
 
 import org.slf4j.Logger;
