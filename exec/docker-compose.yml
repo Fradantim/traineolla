@@ -1,0 +1,39 @@
+version: "3.8"
+
+services: 
+  db-util:
+    build: ../app/db-util
+    ports:
+      - "8090:8080"
+      - "9090:9090"
+    env_file:
+      - ../../traineolla-secrets/app/db-util/application.properties
+    environment:
+      server.port: 8080
+  entity-server:
+    build: ../app/entity-server
+    ports:
+      - "8081:8080"
+    env_file:
+      - ../../traineolla-secrets/app/entity-server/application.properties
+    environment:
+      server.port: 8080
+      spring.r2dbc.url: 'r2dbc:h2:tcp://db-util:9090/file./oreport;DB_CLOSE_ON_EXIT=FALSE'
+    depends_on:
+      - db-util
+  udemy-connector:
+    build: ../app/udemy-connector
+    ports:
+      - "8082:8080"
+    env_file:
+      - ../../traineolla-secrets/app/udemy-connector/application.properties
+    environment:
+      server.port: 8080
+  mail-server:
+    build: ../app/mail-server
+    ports:
+      - "8083:8080"
+    env_file:
+      - ../../traineolla-secrets/app/mail-server/application.properties
+    environment:
+      server.port: 8080
