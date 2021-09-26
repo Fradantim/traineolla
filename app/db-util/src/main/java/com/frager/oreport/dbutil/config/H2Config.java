@@ -24,6 +24,7 @@ public class H2Config {
 	public ServletRegistrationBean<WebServlet> h2ServletRegistration() {
 		ServletRegistrationBean<WebServlet> registration = new ServletRegistrationBean<>(new WebServlet());
 		registration.addUrlMappings("/console/*");
+		registration.addInitParameter("-webAllowOthers", "true");
 		return registration;
 	}
 }
