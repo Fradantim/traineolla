@@ -34,7 +34,10 @@ public class UserActivityServiceImpl extends UdemyService implements UserActivit
 	public Flux<UserActivity> getUserActivity(MultiValueMap<String, String> queryParams) {
 		Mono<PageResponse<UserActivity>> userActivityPageMono = udemyClient.getUserActivity(queryParams);
 		Flux<UserActivity> currentFlux = userActivityPageMono.flatMapMany(page -> {
-			logger.debug("Transformando pagina de {} elementos", page.getCount());
+			if (logger.isDebugEnabled()) {
+				Integer pageSize = (page.getResults() != null) ? page.getResults().size() : 0;
+				logger.debug("Transformando pagina de {} elementos de un total de {}", pageSize, page.getCount());
+			}
 			return Flux.fromIterable(page.getResults()).concatWith(getNextPage(page.getNext(), this::getUserActivity));
 		});
 

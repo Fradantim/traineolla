@@ -35,7 +35,11 @@ public class UserCourseActivityServiceImpl extends UdemyService implements UserC
 		Mono<PageResponse<UserCourseActivity>> userCourseActivityPageMono = udemyClient
 				.getUserCourseActivity(queryParams);
 		Flux<UserCourseActivity> currentFlux = userCourseActivityPageMono.flatMapMany(page -> {
-			logger.debug("Transformando pagina de {} elementos", page.getCount());
+			if (logger.isDebugEnabled()) {
+				Integer pageSize = (page.getResults() != null) ? page.getResults().size() : 0;
+				logger.debug("Transformando pagina de {} elementos de un total de {}", pageSize, page.getCount());
+			}
+
 			return Flux.fromIterable(page.getResults())
 					.concatWith(getNextPage(page.getNext(), this::getUserCourseActivity));
 		});
