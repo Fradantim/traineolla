@@ -3,3 +3,5 @@ databaseChangeLog:
       file: db/changelogs/db.changelog-202108220000-initial-schema.yaml
   - include:
       file: db/changelogs/db.changelog-202108250000-technology.yaml
+  - include:
+      file: db/changelogs/db.changelog-202109120000-acc-course-snapshot.yaml      

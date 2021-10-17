@@ -1,0 +1,78 @@
+databaseChangeLog:
+- changeSet:
+    id: 202109120000-acc-course-snapshot-01-create-account-course-snapshot
+    author: oreport.db-util
+    changes:
+    - createTable:
+        tableName: ACCOUNT_COURSE_SNAPSHOT
+        columns:
+        - column:
+            autoIncrement: true
+            constraints:
+                primaryKey: true
+                primaryKeyName: ACCOUNT_COURSE_SNAPSHOT_PK
+            name: ID
+            type: BIGINT
+        - column:
+            constraints:
+                nullable: false
+            name: ACCOUNT_EID
+            type: VARCHAR(255)
+        - column:
+            constraints:
+                nullable: false
+            name: UDEMY_COURSE_ID
+            type: BIGINT
+        - column:
+            constraints:
+                nullable: false
+            name: SNAPSHOT_DATETIME
+            type: DATETIME
+        - column:
+            name: PREVIOUS_SNAP
+            type: BIGINT
+        - column:
+            name: UDEMY_ACCOUNT
+            type: VARCHAR(255)
+        - column:
+            name: COMPLETION_RATIO
+            type: INT
+        - column:
+            name: NUM_VIDEO_CONSUMED_MINUTES
+            type: INT
+        - column:
+            name: COURSE_ENROLL_DATE
+            type: DATETIME
+        - column:
+            name: COURSE_START_DATE
+            type: DATETIME
+        - column:
+            name: COURSE_FIRST_COMPLETION_DATE
+            type: DATETIME
+        - column:
+            name: COURSE_COMPLETION_DATE
+            type: DATETIME
+- changeSet:
+    id: 202109120000-acc-course-snapshot-02-create-acc-course-snapshot-idx
+    author: oreport.db-util
+    changes:
+    - createIndex:
+        tableName: ACCOUNT_COURSE_SNAPSHOT
+        columns:
+        - column:
+            name: ACCOUNT_EID
+        - column:
+            name: UDEMY_COURSE_ID
+        - column:
+            name: SNAPSHOT_DATETIME
+        unique:  true
+        indexName: ACC_COURSE_SNAP_IDX_ACC_COURSE_DATE
+    - createIndex:
+        tableName: ACCOUNT_COURSE_SNAPSHOT
+        columns:
+        - column:
+            name: UDEMY_COURSE_ID
+        - column:
+            name: SNAPSHOT_DATETIME
+        unique:  false
+        indexName: ACC_COURSE_SNAP_IDX_COURSE_DATE
