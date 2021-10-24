@@ -1,8 +1,5 @@
 package com.frager.oreport.batchcoursesnapshot.service.impl;
 
-import java.time.Duration;
-import java.time.LocalDate;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,20 +31,8 @@ public class UserCourseActivityServiceImpl implements UserCourseActivityService 
 	@Value("#{${udemy-connector.query-params}}")
 	private MultiValueMap<String, String> queryArguments;
 
-	@Value("${udemy-connector.query-param.to-date}")
-	private String toDateParam;
-
-	@Value("${udemy-connector.query-param.from-date}")
-	private String fromDateParam;
-
-	@Value("${udemy-connector.query-param.from-date.months-ago}")
-	private Integer fromDateParamMonthsAgo;
-
-	public Flux<UserCourseActivity> getActivitiesBefore(String toDate) {
+	public Flux<UserCourseActivity> getActivitiesBefore() {
 		MultiValueMap<String, String> allQueryArguments = new MultiValueMapAdapter<>(queryArguments);
-		allQueryArguments.add(toDateParam, toDate);
-		allQueryArguments.add(fromDateParam, LocalDate.parse(toDate).atStartOfDay()
-				.minus(Duration.ofDays(fromDateParamMonthsAgo * 30)).toLocalDate().toString());
 
 		String finalUrl = UriComponentsBuilder.fromHttpUrl(udemyConnectorUrl).queryParams(allQueryArguments).build()
 				.toUriString();

@@ -40,9 +40,10 @@ public class AppRunner implements CommandLineRunner {
 	public void run(String... args) throws Exception {
 		logger.info("Args: {}", (Object[]) args);
 
-		validateArgs(args);
-		String toDate = args[0];
-		executeOperation(toDate);
+//		validateArgs(args);
+//		String toDate = args[0];
+//		executeOperation(toDate);
+		executeOperation(null);
 	}
 
 	private void executeOperation(String toDate) {

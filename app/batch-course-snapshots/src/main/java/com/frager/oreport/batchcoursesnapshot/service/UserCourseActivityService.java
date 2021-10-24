@@ -6,5 +6,5 @@ import reactor.core.publisher.Flux;
 
 public interface UserCourseActivityService {
 
-	public Flux<UserCourseActivity> getActivitiesBefore(String toDate);
+	public Flux<UserCourseActivity> getActivitiesBefore();
 }

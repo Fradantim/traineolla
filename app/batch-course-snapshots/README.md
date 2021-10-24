@@ -51,7 +51,4 @@ Valores por defecto (y ejemplos) en [application.properties](src/main/resources/
 | - | - |
 | `transaction.size` | Cantidad de elementos por transacción hacia la bbdd. |
 | `udemy-connector.query.page_size` | Cantidad de elementos por pagina a enviar al servicio [udemy-connector](../udemy-connector). |
-| `udemy-connector.query-param.from-date` | Nombre del argumento fecha desde que espera el servicio [udemy-connector](../udemy-connector). |
-| `udemy-connector.query-param.from-date.months-ago` | Cantidad de meses en el pasado en que se para la fecha desde respecto del argumento fecha hasta. |
-| `udemy-connector.query-param.to-date` | Nombre del argumento fecha hasta que espera el servicio [udemy-connector](../udemy-connector). |
 | `udemy-connector.query-params` | Parametros de request tipicos que se envian al servicio [udemy-connector](../udemy-connector). |
