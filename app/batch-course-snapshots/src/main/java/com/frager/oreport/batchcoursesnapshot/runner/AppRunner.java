@@ -38,18 +38,12 @@ public class AppRunner implements CommandLineRunner {
 
 	@Override
 	public void run(String... args) throws Exception {
-		logger.info("Args: {}", (Object[]) args);
-
-//		validateArgs(args);
-//		String toDate = args[0];
-//		executeOperation(toDate);
-		executeOperation(null);
+		executeOperation();
 	}
 
-	private void executeOperation(String toDate) {
-		logger.info("Iniciando proceso de actualizacion de snapshots con al fecha hasta {}.", toDate);
-
-		Flux<UserCourseActivity> activitiesFlux = activityService.getActivitiesBefore(toDate);
+	private void executeOperation() {
+		logger.info("Iniciando proceso de actualizacion de snapshots.");
+		Flux<UserCourseActivity> activitiesFlux = activityService.getActivitiesBefore();
 
 		activitiesFlux.doOnComplete(this::end).filter(mapper::isValid).map(mapper::buildFromActivity)
 				.filter(snapshotService::isApplicableEntity).buffer(transactionSize).map(snapshotService::saveAll)
