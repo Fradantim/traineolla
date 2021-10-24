@@ -3,7 +3,7 @@
 - [Schedulers](#schedulers)
   - [DIAGRAMA DE SECUENCIA](#diagrama-de-secuencia)
   - [DEFINICIONES](#definiciones)
-    - [ACCOUNT_COURSE_ACTIVITY](#account_course_activity)
+    - [COURSE_SNAPSHOTS](#course_snapshots)
     - [ACCOUNT_STATUS](#account_status)
     - [COURSE_UPDATE](#course_update)
     - [LEARNING_PATH_UPDATE](#learning_path_update)
@@ -12,7 +12,7 @@
 
 ## DIAGRAMA DE SECUENCIA
 ```
-⏰ -> [ACCOUNT_COURSE_ACTIVITY] -> [UNKNOWN_ACCOUNTS]
+⏰ -> [COURSE_SNAPSHOTS] -> [UNKNOWN_ACCOUNTS]
        |
        `-> [COURSE_UPDATE] -> [LEARNING_PATH_UPDATE] -> [RANKING_UPDATE]
 
@@ -23,19 +23,17 @@
 
 ## DEFINICIONES
 
-### ACCOUNT_COURSE_ACTIVITY
+### COURSE_SNAPSHOTS
 
 Actualiza la actividad de los usuarios en relación a los cursos.
 
 - **PERIODICIDAD**
-  - Determinado por **INPUT**
-- **INPUT** from_date (DATE), to_date (DATE)
-  - (TODAY - 1, TODAY) correr 3 veces por día
-  - (TODAY - 1, TODAY) correr diariamente
-  - (TODAY - 7, TODAY) correr semanalmente **(ideal)**
-  - (PRIMERO DEL MES PASADO, PRIMERO DEL MES ACTUAL) correr mensualmente
+  - correr 3 veces por día
+  - correr diariamente
+  - correr semanalmente **(ideal)**
+  - correr mensualmente
 - **OPERACION**
-  - Query Udemy User Course Activity con args from_date, to_date
+  - Query Udemy User Course Activity (usar args from_date, to_date no es viable)
 - **OUTPUT**
   - Por cada resultado de Udemy:
     - `SELECT * FROM ACCOUNT_COURSE_SNAPSHOT WHERE ACCOUNT_EID = {} AND UDEMY_COURSE_ID = {} AND SNAPSHOT_DATE = (SELECT MAX(SNAPSHOT_DATE) FROM ACCOUNT_COURSE_SNAPSHOT WHERE ACCOUNT_EID = {} AND UDEMY_COURSE_ID = {})` *(consulta indexada)*
@@ -47,7 +45,7 @@ Actualiza la actividad de los usuarios en relación a los cursos.
 - **NOTAS**
   - `UDEMY_PAGE_SIZE` = 100 (o lo máximo que permita Udemy, actualmente 100)
   - `TRANSACTION_SIZE` = `UDEMY_PAGE_SIZE` * 10
-  - ⚠️ Para dar una buena visibilidad del pasado necesita una consulta inicial "desde el principio de los tiempos", caso contrario de aca no se recupera cuantos minutos dedicó la cuenta al curso.
+  - ⚠️ No se podrá recuperar información precisa del pasado.
 
 ### ACCOUNT_STATUS
 
