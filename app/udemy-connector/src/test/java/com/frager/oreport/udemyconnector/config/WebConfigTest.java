@@ -15,6 +15,7 @@ import org.springframework.web.reactive.function.client.ExchangeFilterFunction;
 import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.reactive.function.client.WebClientRequestException;
 
+import org.springframework.web.reactive.function.client.WebClientResponseException;
 import reactor.core.publisher.Mono;
 
 @SpringBootTest
@@ -35,7 +36,7 @@ class WebConfigTest {
 		WebClient wc = new WebConfig().buildUdemyWebClient(defaultWebClientBuilder, user, pass, authHeader,
 				Arrays.asList(assertHasAuthHeader));
 		Mono<Object> resMono=wc.get().uri("0.0.0.0").retrieve().bodyToMono(Object.class);
-		assertThrows(WebClientRequestException.class, () -> {
+		assertThrows(WebClientResponseException.class, () -> {
 			resMono.block();
 		});
 	}
