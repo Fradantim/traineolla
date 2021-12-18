@@ -1,11 +1,8 @@
 package com.frager.oreport.entityserver.model;
 
 import org.springframework.data.annotation.Id;
-import org.springframework.data.annotation.Transient;
 import org.springframework.data.relational.core.mapping.Column;
 import org.springframework.lang.NonNull;
-
-import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 
@@ -19,14 +16,6 @@ public class Course {
 	@Column("UDEMY_ID")
 	private Long udemyId;
 
-	/**
-	 * Atributo ignorado hasta que el driver actual pueda traducir CLOB -> String
-	 * 
-	 * @see <a href="https://github.com/r2dbc/r2dbc-h2/issues/202">r2dbc-h2
-	 *      Issue#202</a>
-	 */
-	@JsonIgnore
-	@Transient
 	private String description;
 
 	private String title;
