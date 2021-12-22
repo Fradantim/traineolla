@@ -1,6 +1,5 @@
 package com.frager.oreport.batchcourseupdate.entity;
 
-import java.time.OffsetDateTime;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -41,9 +40,7 @@ public class Course {
   @Column(name = "EXPECTED_SCORE")
   private Integer expectedScore;
 
-  public Course() {
-    super();
-  }
+  public Course() {super();}
 
   public Long getId() {
     return id;
