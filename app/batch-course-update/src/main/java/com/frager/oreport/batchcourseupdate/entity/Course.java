@@ -53,9 +53,7 @@ public class Course {
     this.id = id;
   }
 
-  public Long getUdemyId() {
-    return udemyId;
-  }
+  public Long getUdemyId() {return udemyId;}
 
   public void setUdemyId(Long udemyId) {this.udemyId = udemyId;}
 
