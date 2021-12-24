@@ -10,7 +10,7 @@ import javax.persistence.Table;
 
 @Table(name = "LEARNING_PATH")
 @Entity
-public class LearningPathUpdate {
+public class LearningPath {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -28,7 +28,7 @@ public class LearningPathUpdate {
   @Column(name = "TECHNOLOGY_ID")
   private Long technologyId;
 
-  public LearningPathUpdate() {super();}
+  public LearningPath() {super();}
 
   public Long getId() {
     return id;
